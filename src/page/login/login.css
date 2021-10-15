@@ -16,14 +16,57 @@
   left: 50%;
   transform: translate(-50%, -50%);
 
-  border: 2px solid black;
+  /* border: 2px solid black; */
   /* height: 250px; */
-  width: 300px;
+  width: 280px;
 }
 
 .loginPage__form {
   display: flex;
   flex-direction: column;
+}
+
+.loginPage__inputSpan {
+  margin-bottom: 1rem;
+
+  background-color: white;
+  border: 2px solid #2e418c;
+  border-radius: 33px;
+  padding: 0.8rem;
+
+  display: flex;
+  align-items: center;
+}
+
+.loginPage__input {
+  border: none;
+  outline: none;
+  margin-left: 1rem;
+}
+
+input[type="text"]::placeholder {
+  text-align: center;
+  color: #2e418c;
+  font-size: 16px;
+}
+
+.loginPage__button {
+  margin-bottom: 0.7rem;
+  border-radius: 33px;
+  border: none;
+  padding: 0.8rem;
+  text-align: center;
+  color: white;
+  font-size: 16px;
+  background-color: #2e418c;
+}
+
+.loginPage__radio {
+  align-self: flex-end;
+  font-size: 14px;
+  font-weight: 400;
+  color: #2e418c;
+  margin-right: 5px;
 }
 
 .ant-image-mask-info {
