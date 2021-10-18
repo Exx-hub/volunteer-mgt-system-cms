@@ -2,19 +2,22 @@ import React, { useEffect, useRef, useState } from "react";
 import "./login.css";
 import bg from "../../assets/images/loginBg.jpg";
 import phone from "../../assets/images/Phone.png";
-import { Image, Form, Input, Button, Radio, Spin } from "antd";
+import { Image, Form, Input, Button, Radio, Spin, Checkbox } from "antd";
 import {
   PhoneOutlined,
   LockOutlined,
   LoadingOutlined,
 } from "@ant-design/icons";
+import { useHistory } from "react-router";
 
 function Login() {
   const [isLoading, setIsLoading] = useState(false);
   const [mobile, setMobile] = useState("");
   const [password, setPassword] = useState("");
+  const [checked, setChecked] = useState(false);
 
   const inputRef = useRef(null);
+  const history = useHistory();
 
   useEffect(() => {
     inputRef.current.focus();
@@ -33,6 +36,9 @@ function Login() {
 
       setMobile("");
       setPassword("");
+
+      //simulate successful login, redirect to home
+      history.push("/home");
     }, 2000);
   };
 
@@ -84,7 +90,13 @@ function Login() {
             )}
             Login
           </Button>
-          <Radio className="loginPage__radio"> Remember</Radio>
+          <Checkbox
+            onChange={() => setChecked(!checked)}
+            className="loginPage__radio"
+          >
+            {" "}
+            Remember
+          </Checkbox>
         </Form>
       </div>
     </div>
