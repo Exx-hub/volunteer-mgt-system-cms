@@ -68,8 +68,8 @@ function Home() {
         </Menu>
       </Sider>
 
-      <Layout style={{ background: "coral" }}>
-        <Content style={{ background: "blue" }}>
+      <Layout>
+        <Content className="content">
           <Switch>
             <Route path="/home/users">
               <Users />

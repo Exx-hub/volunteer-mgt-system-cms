@@ -10,6 +10,8 @@
   background-size: cover;
   background-attachment: fixed;
   background-repeat: no-repeat;
+
+  width: 280px;
 }
 
 .homePage__sider--menu {
@@ -18,14 +20,24 @@
 
 .menu__item {
   list-style: none;
-  margin: 2rem 1rem;
+  margin: 2rem 0rem;
+  margin-left: 1.6rem;
   font-size: 1.6rem;
+  padding: 0px !important;
 
   color: white;
+  cursor: pointer;
 }
 
 .active {
   color: #f8bc29;
+}
+
+.content {
+  height: 100vh;
+  /* border: 1px solid green; */
+  max-width: calc(100vw - 280px);
+  width: calc(100vw - 280px);
 }
 
 @media screen and (min-width: 1750px) {
