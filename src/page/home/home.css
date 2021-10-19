@@ -20,6 +20,12 @@
   list-style: none;
   margin: 2rem 1rem;
   font-size: 1.6rem;
+
+  color: white;
+}
+
+.active {
+  color: #f8bc29;
 }
 
 @media screen and (min-width: 1750px) {
