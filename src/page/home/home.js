@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "./home.css";
 import "../../assets/images/sidebar.png";
-import SideBar from "../../components/SideBar";
 import {
   Switch,
   Route,

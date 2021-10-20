@@ -1,5 +1,4 @@
-import React from "react";
-import SideBar from "../../components/SideBar";
+import React, { useState } from "react";
 
 function Regional() {
   return (

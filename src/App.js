@@ -1,5 +1,4 @@
 import "./App.css";
-import SideBar from "./components/SideBar";
 import AppNavigator from "./Router";
 
 function App() {

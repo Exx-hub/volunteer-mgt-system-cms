@@ -29,7 +29,7 @@
 
 .usersPage__utils--button {
   border-radius: 30px;
-  background-color: #ea462f;
+  background-color: #db2215;
   color: white;
   font-size: 1.2rem;
   padding: 0.7rem 1.1rem;
@@ -41,7 +41,7 @@
 
 .usersPage__utils--button:hover {
   background-color: white;
-  color: #ea462f;
+  color: #db2215;
 }
 
 .usersPage__utils--search {
@@ -67,4 +67,99 @@ input[type]::placeholder {
   outline: none;
   margin-left: 3rem;
   color: black !important;
+}
+
+.add-user-modal {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  height: 200px;
+  /* width: 600px !important; */
+
+  border: 1px solid red;
+  visibility: hidden;
+
+  color: black;
+}
+
+.active {
+  visibility: visible;
+}
+
+.add-user-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #465aa7;
+  padding: 8px 20px;
+  color: white;
+}
+.add-user-modal-header h2 {
+  font-size: 20px;
+  font-weight: 600;
+}
+.add-user-modal-close-icon {
+  cursor: pointer;
+}
+
+.add-user-modal-form {
+  background-color: #f8bc29;
+}
+
+.top-inputs {
+  display: flex;
+  justify-content: space-evenly;
+  padding: 0.5rem 1rem;
+}
+.bottom-inputs {
+  display: flex;
+  justify-content: space-evenly;
+  padding: 0.5rem 1rem;
+}
+h5 {
+  margin-left: 5px;
+  margin-bottom: 5px;
+  font-weight: normal;
+  font-family: "Montserrat", sans-serif !important;
+  color: #2e418c;
+  font-size: 13px;
+}
+.add-user-modal-input {
+  width: 200px;
+  margin-right: 1rem;
+  outline: none;
+  border: none;
+  border-radius: 11px;
+  padding: 6px 15px;
+}
+
+.add-user-modal-button {
+  width: 110px;
+  border-radius: 33px;
+  border: none;
+  padding: 7px 10px;
+  margin-top: 5px;
+  margin-bottom: 7px;
+  background-color: #2e418c;
+  color: white;
+  font-size: 11px;
+  margin-left: 20px;
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px,
+    rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
+  cursor: pointer;
+}
+
+.ReactModal__Overlay {
+  opacity: 0;
+  transition: opacity 500ms ease-in-out;
+}
+
+.ReactModal__Overlay--after-open {
+  opacity: 1;
+}
+
+.ReactModal__Overlay--before-close {
+  opacity: 0;
 }
