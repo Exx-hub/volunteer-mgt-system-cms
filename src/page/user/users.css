@@ -69,6 +69,38 @@ input[type]::placeholder {
   color: black !important;
 }
 
+.usersPage__table {
+  /* border: 1px solid red; */
+  /* border-radius: 33px; */
+  margin-top: 2rem;
+}
+
+.usersPage__table table {
+  border-collapse: collapse;
+  background-color: white;
+  /* border: 1px solid red; */
+  border-radius: 33px;
+  overflow: hidden !important;
+  width: 100%;
+}
+
+.usersPage__table th {
+  background-color: #465aa7 !important;
+  color: white !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  display: table-cell;
+  padding: 5px !important;
+  border-top-color: blue !important;
+}
+
+.ant-table-cell {
+  padding: 10px !important;
+  border: 1px solid lightgray;
+}
+
 .add-user-modal {
   position: absolute;
   top: 50%;
@@ -163,3 +195,24 @@ h5 {
 .ReactModal__Overlay--before-close {
   opacity: 0;
 }
+
+/* .cargo-table{
+  table{
+
+    th {
+      background-color: rgba(46,49,49,0.5) !important;
+      color: white !important;
+      font-size: 11px !important;
+      font-weight: 500 !important;
+    }
+    td{
+      min-width: 140px !important;
+      font-size: 11px !important;
+    }
+
+    .hide {
+      visibility: hidden;
+    }
+  }
+  
+} */

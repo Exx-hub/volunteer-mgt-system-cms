@@ -83,8 +83,6 @@ const tableSource = [
 ];
 
 function Users() {
-  const parseTableData = () => {};
-
   const customStyles = {
     content: {
       top: "50%",
@@ -110,8 +108,61 @@ function Users() {
     address: "",
   });
 
-  console.log(modalInput);
-  console.log(searchInput);
+  // parses data when data is available
+  useEffect(() => {
+    // when component renders, call api to get users, then parse data into records array
+    // to display in table
+    // getAllUsers....
+
+    // call this function when data is retrieved from backend api
+    parseTableData();
+  }, []);
+
+  // hard coded data --- but this data needs to be retrieved from backend
+  const [data, setData] = useState([
+    {
+      firstName: "Alvin",
+      lastName: "Acosta",
+      email: "aa@gmail.com",
+      number: "09164209977",
+      address: "21 Falcon St.",
+    },
+    {
+      firstName: "Alvin",
+      lastName: "Acosta",
+      email: "aa@gmail.com",
+      number: "09164209977",
+      address: "21 Falcon St.",
+    },
+    {
+      firstName: "Alvin",
+      lastName: "Acosta",
+      email: "aa@gmail.com",
+      number: "09164209977",
+      address: "21 Falcon St.",
+    },
+  ]);
+
+  // initial data table -- starts empty, gets data when parsed
+  const [records, setRecord] = useState([]);
+
+  // parses data from backend
+  const parseTableData = () => {
+    const record = data.map((e, i) => {
+      return {
+        key: i,
+        firstName: e.firstName,
+        lastName: e.lastName,
+        email: e.email,
+        mobileNumber: e.number,
+        address: e.address,
+        municipality: e.municipality,
+        region: e.region,
+        birthday: e.birthday,
+      };
+    });
+    setRecord(record);
+  };
 
   const openModal = () => {
     setIsOpen(true);
@@ -158,19 +209,20 @@ function Users() {
               />
             </span>
           </Row>
-          {/* <div>
-          <Table
-            // loading={this.state.fetching}
-            scroll={{ x: true }}
-            rowKey={(e) => e.key}
-            pagination={false}
-            columns={tableSource}
-            // dataSource={""}
-            className="usersPage__table"
-          />
-        </div> */}
+          <div>
+            <Table
+              // loading={this.state.fetching}
+              // scroll={{ x: true }}
+              rowKey={(e) => e.key}
+              pagination={false}
+              columns={tableSource}
+              dataSource={records}
+              className="usersPage__table"
+            />
+          </div>
         </Content>
 
+        {/* ADD USER MODAL  */}
         <Modal
           isOpen={modalIsOpen}
           onAfterOpen={afterOpenModal}
@@ -188,7 +240,7 @@ function Users() {
           >
             <div className="add-user-modal-header">
               <h2>User Details</h2>{" "}
-              <h2 onClick={closeModal} className="modal-close-icon">
+              <h2 onClick={closeModal} className="add-user-modal-close-icon">
                 X
               </h2>
             </div>
