@@ -1,104 +1,15 @@
-import {
-  Layout,
-  Row,
-  Col,
-  Divider,
-  Table,
-  Button,
-  Input,
-  Form,
-  Select,
-  AutoComplete,
-} from "antd";
+import { Layout, Row, Col, Table, Button, Input, Form } from "antd";
 import React, { useEffect, useState } from "react";
 import "./users.css";
 import { SearchOutlined } from "@ant-design/icons";
 import Modal from "react-modal";
+import { pModalStyles, customStyles, sampleUserData } from "./utils";
 
 const { Content } = Layout;
-const { Option } = Select;
-
-const tableSource = [
-  {
-    title: "First Name",
-    dataIndex: "firstName",
-    key: "firstName",
-    fixed: "left",
-    align: "center",
-  },
-  {
-    title: "Last Name",
-    dataIndex: "lastName",
-    key: "lastName",
-    align: "center",
-  },
-  {
-    title: "Email Address",
-    dataIndex: "email",
-    key: "email",
-    align: "center",
-  },
-  {
-    title: "Mobile Number",
-    dataIndex: "mobileNumber",
-    key: "mobileNumber",
-    align: "center",
-  },
-  {
-    title: "Address",
-    dataIndex: "address",
-    key: "address",
-    align: "center",
-  },
-  {
-    title: "Municipality",
-    dataIndex: "municipality",
-    key: "municipality",
-    align: "center",
-  },
-  {
-    title: "Region",
-    dataIndex: "region",
-    key: "region",
-    align: "center",
-  },
-  {
-    title: "Birthday",
-    dataIndex: "birthday",
-    key: "birthday,",
-    align: "center",
-  },
-  {
-    title: "Password",
-    key: "password",
-    align: "center",
-    render: () => {},
-  },
-  {
-    title: "Action",
-    key: "action",
-    align: "center",
-    render: () => {},
-  },
-];
 
 function Users() {
-  const customStyles = {
-    content: {
-      top: "50%",
-      left: "50%",
-      right: "auto",
-      bottom: "auto",
-      marginRight: "-50%",
-      transform: "translate(-50%, -50%)",
-      padding: 0,
-      border: "none",
-      "box-shadow": "rgba(0, 0, 0, 0.24) 0px 3px 8px",
-      width: "1000px",
-    },
-  };
-
   const [modalIsOpen, setIsOpen] = useState(false);
+  const [passwordModalVisibile, setPasswordModalVisible] = useState(false);
   const [searchInput, setSearchInput] = useState("");
   const [modalInput, setModalInput] = useState({
     firstName: "",
@@ -107,6 +18,8 @@ function Users() {
     number: "",
     address: "",
   });
+  const [passwordInput, setPasswordInput] = useState("");
+  const [confirmInput, setConfirmInput] = useState("");
 
   // parses data when data is available
   useEffect(() => {
@@ -119,29 +32,7 @@ function Users() {
   }, []);
 
   // hard coded data --- but this data needs to be retrieved from backend
-  const [data, setData] = useState([
-    {
-      firstName: "Alvin",
-      lastName: "Acosta",
-      email: "aa@gmail.com",
-      number: "09164209977",
-      address: "21 Falcon St.",
-    },
-    {
-      firstName: "Alvin",
-      lastName: "Acosta",
-      email: "aa@gmail.com",
-      number: "09164209977",
-      address: "21 Falcon St.",
-    },
-    {
-      firstName: "Alvin",
-      lastName: "Acosta",
-      email: "aa@gmail.com",
-      number: "09164209977",
-      address: "21 Falcon St.",
-    },
-  ]);
+  const [data, setData] = useState(sampleUserData);
 
   // initial data table -- starts empty, gets data when parsed
   const [records, setRecord] = useState([]);
@@ -164,14 +55,21 @@ function Users() {
     setRecord(record);
   };
 
-  const openModal = () => {
-    setIsOpen(true);
+  const openPModal = () => {
+    setPasswordModalVisible(true);
   };
 
-  const afterOpenModal = () => {
-    // references are now sync'd and can be accessed.
-    // subtitle.style.color = "#f00";
-    // alert("modal opened");
+  const closePModal = () => {
+    setPasswordModalVisible(false);
+  };
+
+  const okPModal = () => {
+    setPasswordModalVisible(false);
+    alert("Submit generate new password");
+  };
+
+  const openModal = () => {
+    setIsOpen(true);
   };
 
   const closeModal = () => {
@@ -187,6 +85,95 @@ function Users() {
     setModalInput({ ...modalInput, [e.target.name]: e.target.value });
   };
 
+  const tableSource = [
+    {
+      title: "First Name",
+      dataIndex: "firstName",
+      key: "firstName",
+      fixed: "left",
+      align: "center",
+    },
+    {
+      title: "Last Name",
+      dataIndex: "lastName",
+      key: "lastName",
+      align: "center",
+    },
+    {
+      title: "Email Address",
+      dataIndex: "email",
+      key: "email",
+      align: "center",
+    },
+    {
+      title: "Mobile Number",
+      dataIndex: "mobileNumber",
+      key: "mobileNumber",
+      align: "center",
+    },
+    {
+      title: "Address",
+      dataIndex: "address",
+      key: "address",
+      align: "center",
+    },
+    {
+      title: "Municipality",
+      dataIndex: "municipality",
+      key: "municipality",
+      align: "center",
+    },
+    {
+      title: "Region",
+      dataIndex: "region",
+      key: "region",
+      align: "center",
+    },
+    {
+      title: "Birthday",
+      dataIndex: "birthday",
+      key: "birthday,",
+      align: "center",
+    },
+    {
+      title: "Password",
+      key: "password",
+      align: "center",
+      render: (user) => (
+        <Button
+          style={{
+            backgroundColor: "#3061c9",
+            border: "none",
+            color: "white",
+            padding: 4,
+            borderRadius: "5px",
+            cursor: modalIsOpen ? "not-allowed" : "pointer",
+          }}
+          disabled={modalIsOpen}
+          onClick={() => setPasswordModalVisible(true)}
+        >
+          Generate
+        </Button>
+      ),
+    },
+    {
+      title: "Action",
+      key: "action",
+      align: "center",
+      render: (user) => {
+        return (
+          <select disabled={modalIsOpen || passwordModalVisibile}>
+            <option value="" disabled selected hidden>
+              Action
+            </option>
+            <option>EDIT</option>
+            <option>DELETE</option>
+          </select>
+        );
+      },
+    },
+  ];
+
   return (
     <>
       <Layout className="usersPage__container">
@@ -196,7 +183,15 @@ function Users() {
           </Row>
           <div className="usersPage__divider" />
           <Row className="usersPage__utils">
-            <Button onClick={openModal} className="usersPage__utils--button">
+            <Button
+              disabled={passwordModalVisibile}
+              onClick={openModal}
+              className={
+                passwordModalVisibile
+                  ? "usersPage__utils--button disableButton"
+                  : "usersPage__utils--button"
+              }
+            >
               Add New User +
             </Button>
             <span className="usersPage__utils--search">
@@ -222,20 +217,62 @@ function Users() {
           </div>
         </Content>
 
-        {/* ADD USER MODAL  */}
+        {/* GENERATE PASSWORD MODAL  */}
         <Modal
-          isOpen={modalIsOpen}
-          onAfterOpen={afterOpenModal}
-          onRequestClose={closeModal}
-          style={customStyles}
-          contentLabel="Example Modal"
-          overlayClassName="overlayClassname"
+          isOpen={passwordModalVisibile}
+          onRequestClose={closePModal}
+          style={pModalStyles}
+          contentLabel="Password Modal"
         >
           <div
             style={{
               display: "flex",
               flexDirection: "column",
-              backgroundColor: "#f8bc29",
+            }}
+          >
+            <div className="password-modal-header">
+              <h2>Generate New Password</h2>{" "}
+              <h2 className="password-modal-close-icon" onClick={closePModal}>
+                X
+              </h2>
+            </div>
+            <Form className="password-modal-form">
+              <Form.Item>
+                <h5>Password</h5>
+                <Input
+                  className="password-modal-input"
+                  value={passwordInput}
+                  onChange={(e) => setPasswordInput(e.target.value)}
+                />
+              </Form.Item>
+              <Form.Item>
+                <h5>Confirm Password</h5>
+                <Input
+                  className="password-modal-input"
+                  value={confirmInput}
+                  onChange={(e) => setConfirmInput(e.target.value)}
+                />
+              </Form.Item>
+            </Form>
+
+            <Button onClick={okPModal} className="password-modal-button">
+              Submit
+            </Button>
+          </div>
+        </Modal>
+
+        {/* ADD USER MODAL  */}
+        <Modal
+          isOpen={modalIsOpen}
+          onRequestClose={closeModal}
+          style={customStyles}
+          contentLabel="Example Modal"
+        >
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              // backgroundColor: "#f8bc29",
             }}
           >
             <div className="add-user-modal-header">

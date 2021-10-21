@@ -1,10 +1,10 @@
 .usersPage__container {
   height: 100vh;
-  background-color: #f8bc29;
+  background: url("../../assets/images/mainBg.jpg");
+  background-position: right top;
 }
 
 .usersPage__main {
-  /* border: 1px solid red; */
   width: 95%;
   margin: 0 auto;
   padding-top: 2rem;
@@ -13,23 +13,27 @@
 .usersPage__title {
   font-size: 3.5rem;
   font-family: "Bebas Neue", sans-serif;
+  color: white;
 }
 
 .usersPage__divider {
-  background-color: black;
+  background-color: white;
   height: 3px;
-  margin-bottom: 1.5rem;
+  margin-bottom: 3rem;
+  width: 92%;
 }
 
 .usersPage__utils {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-top: 25px;
+  margin-bottom: 25px;
 }
 
 .usersPage__utils--button {
   border-radius: 30px;
-  background-color: #db2215;
+  background-color: #465aa7;
   color: white;
   font-size: 1.2rem;
   padding: 0.7rem 1.1rem;
@@ -41,7 +45,7 @@
 
 .usersPage__utils--button:hover {
   background-color: white;
-  color: #db2215;
+  color: #465aa7;
 }
 
 .usersPage__utils--search {
@@ -70,15 +74,12 @@ input[type]::placeholder {
 }
 
 .usersPage__table {
-  /* border: 1px solid red; */
-  /* border-radius: 33px; */
-  margin-top: 2rem;
+  margin-top: 2.5rem;
 }
 
 .usersPage__table table {
   border-collapse: collapse;
   background-color: white;
-  /* border: 1px solid red; */
   border-radius: 33px;
   overflow: hidden !important;
   width: 100%;
@@ -101,19 +102,11 @@ input[type]::placeholder {
   border: 1px solid lightgray;
 }
 
-.add-user-modal {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-
-  height: 200px;
-  /* width: 600px !important; */
-
-  border: 1px solid red;
-  visibility: hidden;
-
-  color: black;
+select {
+  border: none;
+  padding: 3px;
+  cursor: pointer;
+  outline: none;
 }
 
 .active {
@@ -124,20 +117,22 @@ input[type]::placeholder {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: #465aa7;
+  background-color: #da3748;
   padding: 8px 20px;
   color: white;
 }
-.add-user-modal-header h2 {
+.add-user-modal-header h2,
+.password-modal-header h2 {
   font-size: 20px;
   font-weight: 600;
 }
-.add-user-modal-close-icon {
+.add-user-modal-close-icon,
+.password-modal-close-icon {
   cursor: pointer;
 }
 
 .add-user-modal-form {
-  background-color: #f8bc29;
+  background-color: white;
 }
 
 .top-inputs {
@@ -155,15 +150,16 @@ h5 {
   margin-bottom: 5px;
   font-weight: normal;
   font-family: "Montserrat", sans-serif !important;
-  color: #2e418c;
+  color: #333;
   font-size: 13px;
 }
 .add-user-modal-input {
+  background-color: rgb(236, 236, 236);
   width: 200px;
   margin-right: 1rem;
   outline: none;
   border: none;
-  border-radius: 11px;
+  border-radius: 8px;
   padding: 6px 15px;
 }
 
@@ -174,7 +170,7 @@ h5 {
   padding: 7px 10px;
   margin-top: 5px;
   margin-bottom: 7px;
-  background-color: #2e418c;
+  background-color: #465aa7;
   color: white;
   font-size: 11px;
   margin-left: 20px;
@@ -183,7 +179,60 @@ h5 {
   cursor: pointer;
 }
 
+.disableButton {
+  cursor: not-allowed;
+}
+
+.password-modal-header {
+  background-color: #da3748;
+  padding: 8px 20px;
+  color: white;
+  position: relative;
+  text-align: center;
+}
+
+.password-modal-close-icon {
+  position: absolute;
+  top: 7px;
+  right: 10px;
+}
+
+.password-modal-form {
+  margin: 15px auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.password-modal-input {
+  background-color: rgb(236, 236, 236);
+  width: 250px;
+  outline: none;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 15px;
+  margin-bottom: 10px;
+  /* margin-top: 10px; */
+}
+
+.password-modal-button {
+  width: 130px;
+  border-radius: 33px;
+  border: none;
+  padding: 10px;
+  margin: 0 auto;
+  margin-top: 5px;
+  margin-bottom: 15px;
+  background-color: #465aa7;
+  color: white;
+  font-size: 14px;
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px,
+    rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
+  cursor: pointer;
+}
+
 .ReactModal__Overlay {
+  background-color: rgba(0, 0, 0, 0.6) !important;
   opacity: 0;
   transition: opacity 500ms ease-in-out;
 }

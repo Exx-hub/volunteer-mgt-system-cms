@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "./home.css";
-import "../../assets/images/sidebar.png";
+import "../../assets/images/sidebar.jpg";
 import {
   Switch,
   Route,
@@ -15,6 +15,7 @@ import Users from "../user";
 import Regional from "../regional";
 import Bulletin from "../bulletin";
 import About from "../about";
+import bg from "../../assets/images/sidebar.jpg";
 
 const { Content, Sider } = Layout;
 const { SubMenu } = Menu;

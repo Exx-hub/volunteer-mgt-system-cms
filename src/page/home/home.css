@@ -1,17 +1,20 @@
 .homePage {
   display: flex;
+  background-color: #da3748;
 }
 
 .homePage__sider {
   background-color: red;
   height: 100vh;
 
-  background: url("../../assets/images/sidebar.png");
-  background-size: cover;
+  background: url("../../assets/images/sidebar.jpg");
+  background-size: contain;
   background-attachment: fixed;
   background-repeat: no-repeat;
+  /* background-position: right top; */
 
-  width: 280px;
+  /* width: 10px !important; */
+  /* min-width: 280px !important; */
 }
 
 .homePage__sider--menu {
