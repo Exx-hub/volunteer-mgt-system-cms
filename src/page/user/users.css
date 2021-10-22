@@ -102,12 +102,12 @@ input[type]::placeholder {
   border: 1px solid lightgray;
 }
 
-select {
+/* select {
   border: none;
   padding: 3px;
   cursor: pointer;
   outline: none;
-}
+} */
 
 .active {
   visibility: visible;

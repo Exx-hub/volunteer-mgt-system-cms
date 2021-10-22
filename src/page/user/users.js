@@ -35,7 +35,7 @@ function Users() {
   const [data, setData] = useState(sampleUserData);
 
   // initial data table -- starts empty, gets data when parsed
-  const [records, setRecord] = useState([]);
+  const [records, setRecords] = useState([]);
 
   // parses data from backend
   const parseTableData = () => {
@@ -52,7 +52,7 @@ function Users() {
         birthday: e.birthday,
       };
     });
-    setRecord(record);
+    setRecords(record);
   };
 
   const openPModal = () => {
@@ -162,13 +162,17 @@ function Users() {
       align: "center",
       render: (user) => {
         return (
-          <select disabled={modalIsOpen || passwordModalVisibile}>
-            <option value="" disabled selected hidden>
-              Action
-            </option>
-            <option>EDIT</option>
-            <option>DELETE</option>
-          </select>
+          // <select disabled={modalIsOpen || passwordModalVisibile}>
+          //   <option value="" disabled selected hidden>
+          //     Action
+          //   </option>
+          //   <option>EDIT</option>
+          //   <option>DELETE</option>
+          // </select>
+          <>
+            <Button>EDIT</Button>
+            <Button>DELETE</Button>
+          </>
         );
       },
     },

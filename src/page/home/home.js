@@ -16,6 +16,8 @@ import Regional from "../regional";
 import Bulletin from "../bulletin";
 import About from "../about";
 import bg from "../../assets/images/sidebar.jpg";
+import StatusReport from "../statusReport/statusReport";
+import RegionalNews from "../regionalNews/regionalNews";
 
 const { Content, Sider } = Layout;
 const { SubMenu } = Menu;
@@ -77,12 +79,19 @@ function Home() {
             <Route path="/home/regional">
               <Regional />
             </Route>
+            <Route path="/home/status">
+              <StatusReport />
+            </Route>
+            <Route path="/home/news">
+              <RegionalNews />
+            </Route>
             <Route path="/home/bulletin">
               <Bulletin />
             </Route>
             <Route path="/home/about">
               <About />
             </Route>
+
             <Redirect from="/home" to="/home/users" />
           </Switch>
         </Content>

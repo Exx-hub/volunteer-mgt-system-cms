@@ -9,7 +9,7 @@ export const customStyles = {
     padding: 0,
     border: "none",
     "box-shadow": "rgba(0, 0, 0, 0.24) 0px 3px 8px",
-    width: "60%",
+    width: "50%",
     borderRadius: "12px",
     minWidth: "900px",
   },
