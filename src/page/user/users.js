@@ -139,7 +139,7 @@ function Users() {
       title: "Password",
       key: "password",
       align: "center",
-      render: (user) => (
+      render: (e, user) => (
         <Button
           style={{
             backgroundColor: "#3061c9",

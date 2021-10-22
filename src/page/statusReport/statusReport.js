@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import "./statusReport.css";
 import { sampleUserData, modalStyles } from "./utils";
 
-import { Layout, Row, Col, Button, Table, Form, Input, Dropdown } from "antd";
+import { Layout, Row, Col, Button, Table, Form } from "antd";
 import { LeftOutlined } from "@ant-design/icons";
 import Modal from "react-modal";
 
@@ -92,6 +92,7 @@ function StatusReport() {
         // console.log(record.key);
         // when button click pass key then modal display
         // municipalities using key
+        // or use selected region also
         return (
           <>
             <Button className="detailsButton">Details</Button>
@@ -107,7 +108,10 @@ function StatusReport() {
     <Layout className="statusPage__container">
       <Content className="statusPage__main">
         <Row className="statusPage__titleRow">
-          <LeftOutlined className="back-icon" />
+          <LeftOutlined
+            onClick={() => window.history.back()}
+            className="back-icon"
+          />
           <Col className="statusPage__title">STATUS REPORT</Col>
         </Row>
         <div className="statusPage__divider" />

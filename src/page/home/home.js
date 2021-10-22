@@ -16,8 +16,8 @@ import Regional from "../regional";
 import Bulletin from "../bulletin";
 import About from "../about";
 import bg from "../../assets/images/sidebar.jpg";
-import StatusReport from "../statusReport/statusReport";
-import RegionalNews from "../regionalNews/regionalNews";
+import StatusReport from "../statusReport";
+import RegionalNews from "../regionalNews";
 
 const { Content, Sider } = Layout;
 const { SubMenu } = Menu;

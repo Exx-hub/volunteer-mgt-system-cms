@@ -1,6 +1,6 @@
 .statusPage__container {
   height: 100vh;
-  background: url("../../assets/images/mainBg.jpg");
+  background: url("../../assets/images/mapBg.jpg");
   background-position: right top;
 }
 
@@ -46,6 +46,11 @@
   box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
 }
 
+.statusPage__button:hover {
+  background-color: white;
+  color: #465aa7;
+}
+
 .region__table {
   margin-top: 2rem;
 }
@@ -84,6 +89,7 @@
   border: none;
   padding: 2px;
   border-radius: 4px;
+  cursor: pointer;
 }
 .editButton {
   margin-right: 10px;
@@ -93,6 +99,7 @@
   border: none;
   padding: 2px;
   border-radius: 4px;
+  cursor: pointer;
 }
 .deleteButton {
   margin-right: 10px;
@@ -102,6 +109,7 @@
   border: none;
   padding: 2px;
   border-radius: 4px;
+  cursor: pointer;
 }
 
 .region-modal-header {
@@ -121,6 +129,7 @@
   position: absolute;
   top: 7px;
   right: 10px;
+  cursor: pointer;
 }
 
 .region-modal-form {
