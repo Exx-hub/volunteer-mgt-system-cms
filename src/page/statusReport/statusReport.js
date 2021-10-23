@@ -156,6 +156,9 @@ function StatusReport() {
             <Form.Item>
               <h5>Region:</h5>
               <select onChange={(e) => handleSelect(e.target.value)}>
+                <option value="" selected disabled hidden>
+                  Choose Region
+                </option>
                 {records.map((e, i) => (
                   <option value={e.region}>{e.region}</option>
                 ))}
@@ -163,9 +166,13 @@ function StatusReport() {
             </Form.Item>
             <Form.Item>
               <h5>Municipality:</h5>
+
               <select>
+                <option value="" selected disabled hidden>
+                  Choose Municipality
+                </option>
                 {municipalities.map((e, i) => (
-                  <option>{e}</option>
+                  <option value={e}>{e}</option>
                 ))}
               </select>
             </Form.Item>

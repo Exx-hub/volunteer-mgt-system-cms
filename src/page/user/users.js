@@ -79,6 +79,7 @@ function Users() {
   const okModal = () => {
     setIsOpen(false);
     alert("call api to add user");
+    console.log(modalInput);
   };
 
   const onChange = (e) => {

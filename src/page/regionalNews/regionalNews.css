@@ -80,3 +80,154 @@ input[type]::placeholder {
   margin-left: 3rem;
   color: black !important;
 }
+
+.regionalNews__table {
+  margin-top: 3rem;
+}
+
+.regionalNews__table table {
+  border-collapse: collapse;
+  background-color: white;
+  border-radius: 33px;
+  overflow: hidden !important;
+  width: 90%;
+  margin: 0 auto;
+}
+
+.regionalNews__table th {
+  background-color: #465aa7 !important;
+  color: white !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  display: table-cell;
+  padding: 5px !important;
+  border-top-color: blue !important;
+}
+
+.regionalNews__table td {
+  font-weight: 500;
+}
+
+.ant-table-cell {
+  padding: 10px !important;
+  border: 1px solid lightgray;
+}
+
+.editBtn {
+  margin-right: 10px;
+  width: 50px;
+  background-color: green;
+  color: white;
+  border: none;
+  padding: 2px 3px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.deleteBtn {
+  margin-right: 10px;
+  width: 60px;
+  background-color: red;
+  color: white;
+  border: none;
+  padding: 2px 3px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.viewBtn {
+  margin-right: 10px;
+  width: 50px;
+  background-color: gray;
+  color: white;
+  border: none;
+  padding: 2px 3px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.addNews-modal-header {
+  background-color: #da3748;
+  padding: 8px 20px;
+  color: white;
+  position: relative;
+  text-align: center;
+}
+
+.addNews-modal-header h2 {
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.addNews-modal-close-icon {
+  position: absolute;
+  top: 7px;
+  right: 10px;
+  cursor: pointer;
+}
+
+.addNews-modal-form {
+  margin: 15px auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.addNews-modal-form select {
+  background-color: rgb(236, 236, 236);
+  width: 210px;
+  outline: none;
+  border: none;
+  border-radius: 8px;
+  padding: 6px 15px;
+  margin-bottom: 10px;
+}
+.addNews-modal-form input {
+  background-color: rgb(236, 236, 236);
+  outline: none;
+  border: none;
+  border-radius: 8px;
+  padding: 6px;
+  margin-bottom: 10px;
+}
+
+.addNews-modal-form textarea {
+  background-color: rgb(236, 236, 236);
+  outline: none;
+  border: none;
+  border-radius: 8px;
+  padding: 6px;
+  margin-bottom: 10px;
+  width: 210px;
+  resize: none;
+}
+
+.addNews-modal-button {
+  width: 130px;
+  border-radius: 33px;
+  border: none;
+  padding: 10px;
+  margin: 0 auto;
+  margin-top: 5px;
+  margin-bottom: 15px;
+  background-color: #465aa7;
+  color: white;
+  font-size: 14px;
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px,
+    rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
+  cursor: pointer;
+}
+
+.ReactModal__Overlay {
+  background-color: rgba(0, 0, 0, 0.6) !important;
+  opacity: 0;
+  transition: opacity 500ms ease-in-out;
+}
+
+.ReactModal__Overlay--after-open {
+  opacity: 1;
+}
+
+.ReactModal__Overlay--before-close {
+  opacity: 0;
+}
