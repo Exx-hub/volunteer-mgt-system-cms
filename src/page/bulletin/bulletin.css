@@ -1,29 +1,38 @@
-.usersPage__container {
+.bulletin__container {
   height: 100vh;
-  background: url("../../assets/images/mainBg.jpg");
+  background: url("../../assets/images/mapBg.jpg");
   background-position: right top;
 }
-
-.usersPage__main {
+.bulletin__main {
   width: 95%;
   margin: 0 auto;
   padding-top: 2rem;
 }
-
-.usersPage__title {
+.bulletin__titleRow {
+  display: flex;
+}
+.back__icon {
+  color: white !important;
+  align-self: center;
+  font-size: 32px;
+  font-weight: 800;
+  margin-bottom: 5px;
+  margin-right: 8px;
+  cursor: pointer;
+}
+.bulletin__title {
   font-size: 3.5rem;
   font-family: "Bebas Neue", sans-serif;
   color: white;
 }
-
-.usersPage__divider {
+.bulletin__divider {
   background-color: white;
   height: 3px;
-  margin-bottom: 3rem;
+  margin-bottom: 2rem;
   width: 92%;
 }
 
-.usersPage__utils {
+.bulletin__utils {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -31,7 +40,7 @@
   margin-bottom: 25px;
 }
 
-.usersPage__utils--button {
+.bulletin__button {
   border-radius: 30px;
   background-color: #465aa7;
   color: white;
@@ -39,16 +48,15 @@
   padding: 0.7rem 1.1rem;
   border: none;
   cursor: pointer;
-
   box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
 }
 
-.usersPage__utils--button:hover {
+.bulletin__button:hover {
   background-color: white;
   color: #465aa7;
 }
 
-.usersPage__utils--search {
+.bulletin__utils--search {
   border-radius: 30px;
   background-color: white;
   width: 350px;
@@ -66,26 +74,27 @@ input[type]::placeholder {
   font-weight: 300;
 }
 
-.search--input {
+.bulletin__search--input {
   border: none;
   outline: none;
   margin-left: 3rem;
   color: black !important;
 }
 
-.usersPage__table {
-  margin-top: 2.5rem;
+.bulletin__table {
+  margin-top: 3rem;
 }
 
-.usersPage__table table {
+.bulletin__table table {
   border-collapse: collapse;
   background-color: white;
   border-radius: 33px;
   overflow: hidden !important;
-  width: 100%;
+  width: 90%;
+  margin: 0 auto;
 }
 
-.usersPage__table th {
+.bulletin__table th {
   background-color: #465aa7 !important;
   color: white !important;
   font-size: 14px !important;
@@ -97,25 +106,8 @@ input[type]::placeholder {
   border-top-color: blue !important;
 }
 
-.userEditBtn {
-  margin-right: 10px;
-  width: 50px;
-  background-color: green;
-  color: white;
-  border: none;
-  padding: 2px;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-.userDelBtn {
-  width: 60px;
-  background-color: red;
-  color: white;
-  border: none;
-  padding: 2px;
-  border-radius: 4px;
-  cursor: pointer;
+.bulletin__table td {
+  font-weight: 500;
 }
 
 .ant-table-cell {
@@ -123,81 +115,38 @@ input[type]::placeholder {
   border: 1px solid lightgray;
 }
 
-.active {
-  visibility: visible;
-}
-
-.add-user-modal-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background-color: #da3748;
-  padding: 8px 20px;
+.bulletin__editBtn {
+  margin-right: 10px;
+  width: 50px;
+  background-color: green;
   color: white;
+  border: none;
+  padding: 2px 3px;
+  border-radius: 4px;
+  cursor: pointer;
 }
-.add-user-modal-header h2,
-.password-modal-header h2 {
-  font-size: 20px;
-  font-weight: 600;
+.bulletin__deleteBtn {
+  margin-right: 10px;
+  width: 60px;
+  background-color: red;
+  color: white;
+  border: none;
+  padding: 2px 3px;
+  border-radius: 4px;
+  cursor: pointer;
 }
-.add-user-modal-close-icon,
-.password-modal-close-icon {
+.bulletin__viewBtn {
+  margin-right: 10px;
+  width: 50px;
+  background-color: gray;
+  color: white;
+  border: none;
+  padding: 2px 3px;
+  border-radius: 4px;
   cursor: pointer;
 }
 
-.add-user-modal-form {
-  background-color: white;
-}
-
-.top-inputs {
-  display: flex;
-  justify-content: space-evenly;
-  padding: 0.5rem 1rem;
-}
-.bottom-inputs {
-  display: flex;
-  justify-content: space-evenly;
-  padding: 0.5rem 1rem;
-}
-h5 {
-  margin-left: 5px;
-  margin-bottom: 5px;
-  font-weight: normal;
-  font-family: "Montserrat", sans-serif !important;
-  color: #333;
-  font-size: 13px;
-}
-.add-user-modal-input {
-  background-color: rgb(236, 236, 236);
-  width: 200px;
-  margin-right: 1rem;
-  outline: none;
-  border: none;
-  border-radius: 8px;
-  padding: 6px 15px;
-}
-
-.add-user-modal-button {
-  width: 110px;
-  border-radius: 33px;
-  border: none;
-  padding: 7px 10px;
-  margin-top: 5px;
-  margin-bottom: 7px;
-  background-color: #465aa7;
-  color: white;
-  font-size: 11px;
-  margin-left: 20px;
-  box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px,
-    rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
-  cursor: pointer;
-}
-
-.disableButton {
-  cursor: not-allowed;
-}
-
-.password-modal-header {
+.addAnnouncement-modal-header {
   background-color: #da3748;
   padding: 8px 20px;
   color: white;
@@ -205,32 +154,69 @@ h5 {
   text-align: center;
 }
 
-.password-modal-close-icon {
+.addAnnouncement-modal-header h2 {
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.addAnnouncement-modal-close-icon {
   position: absolute;
   top: 7px;
   right: 10px;
+  cursor: pointer;
 }
 
-.password-modal-form {
+.addAnnouncement-modal-form {
   margin: 15px auto;
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
-.password-modal-input {
+.addAnnouncement-modal-form select {
   background-color: rgb(236, 236, 236);
-  width: 250px;
+  width: 210px;
   outline: none;
   border: none;
   border-radius: 8px;
-  padding: 10px 15px;
+  padding: 5px 15px;
   margin-bottom: 10px;
-  /* margin-top: 10px; */
+  height: 30px;
+  margin-right: 15px;
+}
+.addAnnouncement-modal-form input {
+  background-color: rgb(236, 236, 236);
+  outline: none;
+  border: none;
+  border-radius: 8px;
+  padding: 6px;
+  margin-bottom: 10px;
+  margin-right: 15px;
+  height: 31px;
 }
 
-.password-modal-button {
-  width: 130px;
+.form-div {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+.textarea-div {
+  width: 99%;
+}
+
+.addAnnouncement-modal-form textarea {
+  background-color: rgb(236, 236, 236);
+  outline: none;
+  border: none;
+  border-radius: 8px;
+  padding: 6px;
+  margin-bottom: 10px;
+  width: 97%;
+  resize: none;
+}
+
+.addAnnouncement-modal-button {
+  width: 180px;
   border-radius: 33px;
   border: none;
   padding: 10px;
@@ -243,18 +229,4 @@ h5 {
   box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px,
     rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
   cursor: pointer;
-}
-
-.ReactModal__Overlay {
-  background-color: rgba(0, 0, 0, 0.6) !important;
-  opacity: 0;
-  transition: opacity 500ms ease-in-out;
-}
-
-.ReactModal__Overlay--after-open {
-  opacity: 1;
-}
-
-.ReactModal__Overlay--before-close {
-  opacity: 0;
 }

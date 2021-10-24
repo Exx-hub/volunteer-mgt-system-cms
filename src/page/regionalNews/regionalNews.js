@@ -131,6 +131,7 @@ function RegionalNews() {
       key: "region",
       fixed: "left",
       align: "center",
+      width: 100,
     },
     {
       title: "Municipality",
@@ -291,7 +292,7 @@ function RegionalNews() {
         isOpen={viewModalOpen}
         onRequestClose={closeViewModal}
         style={viewModalStyles}
-        contentLabel="Edit News Modal"
+        contentLabel="View News Modal"
       >
         <div
           style={{

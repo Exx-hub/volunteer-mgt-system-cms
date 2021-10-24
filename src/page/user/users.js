@@ -93,6 +93,7 @@ function Users() {
       key: "firstName",
       fixed: "left",
       align: "center",
+      width: 150,
     },
     {
       title: "Last Name",
@@ -117,6 +118,7 @@ function Users() {
       dataIndex: "address",
       key: "address",
       align: "center",
+      width: 200,
     },
     {
       title: "Municipality",
@@ -161,19 +163,13 @@ function Users() {
       title: "Action",
       key: "action",
       align: "center",
+      width: 180,
       render: (user) => {
         return (
-          // <select disabled={modalIsOpen || passwordModalVisibile}>
-          //   <option value="" disabled selected hidden>
-          //     Action
-          //   </option>
-          //   <option>EDIT</option>
-          //   <option>DELETE</option>
-          // </select>
-          <>
-            <Button>EDIT</Button>
-            <Button>DELETE</Button>
-          </>
+          <div style={{ minWidth: "130px" }}>
+            <Button className="userEditBtn">EDIT</Button>
+            <Button className="userDelBtn">DELETE</Button>
+          </div>
         );
       },
     },
