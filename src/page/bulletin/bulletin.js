@@ -167,10 +167,6 @@ function Bulletin() {
     <Layout className="bulletin__container">
       <Content className="bulletin__main">
         <Row className="bulletin__titleRow">
-          <LeftOutlined
-            onClick={() => window.history.back()}
-            className="back__icon"
-          />
           <Col className="bulletin__title">BULLETIN MANAGEMENT</Col>
         </Row>
         <div className="bulletin__divider" />
