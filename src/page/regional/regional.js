@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import "./regional.css";
 
 import statusCropped from "../../assets/images/statusCropped.png";

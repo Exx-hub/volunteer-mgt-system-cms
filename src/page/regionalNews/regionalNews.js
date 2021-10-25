@@ -115,11 +115,6 @@ function RegionalNews() {
     setViewModalOpen(false);
   };
 
-  const okViewModal = () => {
-    setViewModalOpen(false);
-    alert("call api to add region");
-  };
-
   const handleModalChange = (e) => {
     setAddNewsInput({ ...addNewsInput, [e.target.name]: e.target.value });
   };

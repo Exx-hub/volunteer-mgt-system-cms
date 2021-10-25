@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "./about.css";
-import { Layout, Row, Col, Button, Table, Form, Input } from "antd";
+import { Layout, Row, Col, Button, Form, Input } from "antd";
 import { EditOutlined } from "@ant-design/icons";
 import Modal from "react-modal";
 import { addAboutTextStyles, aboutDescription } from "./utils";

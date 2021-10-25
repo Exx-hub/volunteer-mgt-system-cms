@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "./bulletin.css";
 import { Layout, Row, Col, Button, Table, Form, Input } from "antd";
-import { LeftOutlined, SearchOutlined } from "@ant-design/icons";
+import { SearchOutlined } from "@ant-design/icons";
 import Modal from "react-modal";
 import {
   sampleUserData,
@@ -120,11 +120,6 @@ function Bulletin() {
 
   const closeViewModal = () => {
     setViewModalOpen(false);
-  };
-
-  const okViewModal = () => {
-    setViewModalOpen(false);
-    alert("call api to add region");
   };
 
   const tableSource = [

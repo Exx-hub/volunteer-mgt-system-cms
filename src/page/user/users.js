@@ -153,7 +153,7 @@ function Users() {
             cursor: modalIsOpen ? "not-allowed" : "pointer",
           }}
           disabled={modalIsOpen}
-          onClick={() => setPasswordModalVisible(true)}
+          onClick={openPModal}
         >
           Generate
         </Button>
@@ -224,6 +224,7 @@ function Users() {
           onRequestClose={closePModal}
           style={pModalStyles}
           contentLabel="Password Modal"
+          ariaHideApp={false}
         >
           <div
             style={{
@@ -268,6 +269,7 @@ function Users() {
           onRequestClose={closeModal}
           style={customStyles}
           contentLabel="Example Modal"
+          ariaHideApp={false}
         >
           <div
             style={{

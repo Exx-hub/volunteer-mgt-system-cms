@@ -15,12 +15,10 @@ import Users from "../user";
 import Regional from "../regional";
 import Bulletin from "../bulletin";
 import About from "../about";
-import bg from "../../assets/images/sidebar.jpg";
 import StatusReport from "../statusReport";
 import RegionalNews from "../regionalNews";
 
 const { Content, Sider } = Layout;
-const { SubMenu } = Menu;
 
 function Home() {
   const history = useHistory();
@@ -40,12 +38,14 @@ function Home() {
       <Sider width={280} className="homePage__sider">
         <Menu className="homePage__sider--menu" mode="inline">
           <Menu.Item
+            key="1"
             className={active === "users" ? "menu__item active" : "menu__item"}
             onClick={() => history.push("/home/users")}
           >
             Users
           </Menu.Item>
           <Menu.Item
+            key="2"
             className={
               active === "regional" ? "menu__item active" : "menu__item"
             }
@@ -54,6 +54,7 @@ function Home() {
             Regional Management
           </Menu.Item>
           <Menu.Item
+            key="3"
             className={
               active === "bulletin" ? "menu__item active" : "menu__item"
             }
@@ -62,6 +63,7 @@ function Home() {
             Bulletin Management
           </Menu.Item>
           <Menu.Item
+            key="4"
             className={active === "about" ? "menu__item active" : "menu__item"}
             onClick={() => history.push("/home/about")}
           >

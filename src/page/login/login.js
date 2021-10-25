@@ -1,18 +1,15 @@
 import React, { useEffect, useRef, useState } from "react";
 import "./login.css";
 import bg from "../../assets/images/loginBg.jpg";
-import phone from "../../assets/images/Phone.png";
-import { Image, Form, Input, Button, Radio, Spin, Checkbox } from "antd";
-import {
-  PhoneOutlined,
-  LockOutlined,
-  LoadingOutlined,
-} from "@ant-design/icons";
+import { Image, Form, Input, Button, Spin, Checkbox } from "antd";
+import { UserOutlined, LockOutlined, LoadingOutlined } from "@ant-design/icons";
 import { useHistory } from "react-router";
+import User from "../../service/User";
+import { UserProfile } from "../../utility";
 
 function Login() {
   const [isLoading, setIsLoading] = useState(false);
-  const [mobile, setMobile] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [checked, setChecked] = useState(false);
 
@@ -28,18 +25,41 @@ function Login() {
 
     // LOGIN API CALL HERE
 
-    setTimeout(() => {
-      setIsLoading(false);
-      // alert("login clicked");
-      console.log("mobile:", mobile);
-      console.log("password", password);
+    // setTimeout(() => {
+    //   setIsLoading(false);
+    //   // alert("login clicked");
+    //   console.log("mobile:", mobile);
+    //   console.log("password", password);
 
-      setMobile("");
-      setPassword("");
+    //   setMobile("");
+    //   setPassword("");
 
-      //simulate successful login, redirect to home
-      history.push("/home");
-    }, 2000);
+    //   //simulate successful login, redirect to home
+    //   history.push("/home");
+    // }, 2000);
+
+    User.login(username, password)
+      .then((e) => {
+        const { data } = e.data;
+        console.log("FRESH FROM LOGIN FETCH:", e.data);
+        setIsLoading(false);
+
+        if (data) {
+          UserProfile.setCredential({
+            user: data.username,
+            token: data.token,
+          });
+          // if (Number((data.user && data.user.status) || "0") === 0) {
+          //   notification["error"]({
+          //     message: "Disabled Account",
+          //     description: "Unable to access your account",
+          //   });
+          //   UserProfile.logout(User);
+          // }
+          history.push("/home");
+        }
+      })
+      .catch((err) => console.log(err.message));
   };
 
   return (
@@ -48,14 +68,13 @@ function Login() {
       <div className="loginPage__formContainer">
         <Form onFinish={onFinish} className="loginPage__form">
           <span className="loginPage__inputSpan">
-            <PhoneOutlined style={{ fontSize: "20px", color: "#2e418c" }} />{" "}
+            <UserOutlined style={{ fontSize: "20px", color: "#2e418c" }} />{" "}
             <Input
-              placeholder="Phone Number"
+              placeholder="Username"
               className="loginPage__input"
-              type="number"
               ref={inputRef}
-              value={mobile}
-              onChange={(e) => setMobile(e.target.value)}
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
             />
           </span>
           <span className="loginPage__inputSpan">
