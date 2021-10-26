@@ -5,7 +5,12 @@ import { SearchOutlined } from "@ant-design/icons";
 import Modal from "react-modal";
 import moment from "moment-timezone";
 
-import { pModalStyles, customStyles, getRegion } from "./utils";
+import {
+  pModalStyles,
+  customStyles,
+  editModalStyles,
+  getRegion,
+} from "./utils";
 import AppUser from "../../service/AppUser";
 import Region from "../../service/Region";
 
@@ -14,11 +19,12 @@ const { Content } = Layout;
 function Users() {
   const [modalIsOpen, setIsOpen] = useState(false);
   const [passwordModalVisibile, setPasswordModalVisible] = useState(false);
+  const [editModalVisible, setEditModalVisible] = useState(false);
   const [searchInput, setSearchInput] = useState("");
   const [modalInput, setModalInput] = useState({
     firstName: "",
     lastName: "",
-    email: "",
+    // email: "",
     mobileNo: "",
     address: "",
     birthDate: "",
@@ -27,6 +33,21 @@ function Users() {
     municipalityId: "",
     password: "",
   });
+  const [editUserInput, setEditUserInput] = useState({
+    firstName: "",
+    lastName: "",
+    // email: "",
+    mobileNo: "",
+    address: "",
+    birthDate: "",
+    gender: "",
+    regionId: "",
+    municipalityId: "",
+    password: "",
+  });
+
+  console.log(editUserInput);
+
   const [passwordInput, setPasswordInput] = useState("");
   const [confirmInput, setConfirmInput] = useState("");
 
@@ -38,6 +59,7 @@ function Users() {
 
   // console.log(selectedRegion);
 
+  // GETS USER LIST AND REGIONLIST
   useEffect(() => {
     AppUser.getAllAppUsers().then((e) => {
       const { data } = e.data;
@@ -53,6 +75,7 @@ function Users() {
     });
   }, []);
 
+  // SETS MUNICIPALITIES DEPENDING ON REGION SELECTED
   useEffect(() => {
     if (selectedRegion) {
       Region.getMunicipalityByRegionId(selectedRegion).then((e) => {
@@ -63,32 +86,53 @@ function Users() {
     }
   }, [selectedRegion]);
 
+  // PARSES RECORDS
   useEffect(() => {
-    if (data.length > 0) {
+    if (data.length > 0 || searchInput === "") {
       parseTableData();
     }
-  }, [data]);
+  }, [data, searchInput]);
 
+  // FILTER TABLE DATA WHEN SEARCH IS CLICKED
+  const doSearch = (text) => {
+    const filtered = records.filter((record) => {
+      return record.fullName.includes(text);
+    });
+
+    setRecords(filtered);
+  };
+
+  // SETS REGION FOR GETTING MUNICIPALITIES FOR EDIT USER
   const handleSelect = (regionId) => {
     setModalInput({ ...modalInput, regionId });
+    setSelectedRegion(regionId);
+  };
+
+  // SETS REGION FOR GETTING MUNICIPALITIES FOR EDIT USER
+  const handleEditSelect = (regionId) => {
+    setEditUserInput({ ...editUserInput, regionId });
     setSelectedRegion(regionId);
   };
 
   // parses data from backend
   const parseTableData = () => {
     const record = data.map((e, i) => {
-      // console.log(e);
+      console.log(e);
       return {
         key: i,
-        fullName: e.fullName,
-        email: e.email,
+        // fullName: e.fullName,
+        firstName: e.firstName,
+        lastName: e.lastName,
+        password: e.password,
+        gender: e.gender,
+        // email: e.email,
         mobileNumber: e.mobileNo,
         address: e.address,
         municipality: "Quezon City",
         region: "NCR",
         birthday: "Oct 26,2001",
-        // municipality: e.municipality,
-        // region: e.region,
+        municipalityId: e.municipalityId,
+        regionId: e.regionId,
         // birthday: moment.tz(e.birthDate).format("MMM DD, YYYY"),
         id: e._id,
       };
@@ -117,6 +161,7 @@ function Users() {
     setIsOpen(false);
   };
 
+  // ADD USER WHEN MODAL IS SUBMITTED
   const okModal = () => {
     setIsOpen(false);
 
@@ -126,7 +171,7 @@ function Users() {
     AppUser.addAppUser(
       modalInput.firstName,
       modalInput.lastName,
-      modalInput.email,
+      // modalInput.email,
       modalInput.mobileNo,
       modalInput.address,
       modalInput.birthDate,
@@ -140,7 +185,7 @@ function Users() {
       setModalInput({
         firstName: "",
         lastName: "",
-        email: "",
+        // email: "",
         mobileNo: "",
         address: "",
         birthDate: "",
@@ -149,37 +194,118 @@ function Users() {
         municipalityId: "",
         password: "",
       });
-      window.location.reload();
+      window.location.reload(); // replace with success prompt
     });
   };
 
+  // DELETE USER
   const deleteUser = (id) => {
     AppUser.deleteAppUser(id).then((e) => {
       const { data } = e.data;
       console.log(data);
-      window.location.reload();
+      window.location.reload(); // replace with success prompt
     });
   };
 
+  const openEditModal = () => {
+    setEditModalVisible(true);
+  };
+
+  const closeEditModal = () => {
+    setEditModalVisible(false);
+  };
+
+  // UPDATE USER WHEN MODAL SUBMITTED
+  const okEditModal = () => {
+    setEditModalVisible(false);
+
+    AppUser.updateAppUser(
+      editUserInput.id,
+      editUserInput.firstName,
+      editUserInput.lastName,
+      // editUserInput.email,
+      editUserInput.mobileNo,
+      editUserInput.address,
+      editUserInput.birthDate,
+      editUserInput.regionId,
+      editUserInput.municipalityId,
+      editUserInput.gender,
+      editUserInput.password
+    ).then((e) => {
+      const { data } = e.data;
+      console.log(data);
+      setEditUserInput({
+        firstName: "",
+        lastName: "",
+        // email: "",
+        mobileNo: "",
+        address: "",
+        birthDate: "",
+        gender: "",
+        regionId: "",
+        municipalityId: "",
+        password: "",
+      });
+      window.location.reload(); // replace with success prompt
+    });
+  };
+
+  // SETS VALUES OF CLICKED USER TO EDIT
+  const handleUserEdit = (user) => {
+    setEditUserInput({
+      ...editUserInput,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      // email: "",
+      mobileNo: user.mobileNumber,
+      address: user.address,
+      birthDate: user.birthday,
+      gender: user.gender,
+      // regionId: user.regionId,
+      // regionId: "",
+      // municipalityId: user.municipalityId,
+      password: "",
+      id: user.id,
+    });
+
+    openEditModal();
+    console.log(user);
+  };
+
+  // ONCHANGE INPUT FOR ADD USER MODAL
   const onChange = (e) => {
     setModalInput({ ...modalInput, [e.target.name]: e.target.value });
   };
 
+  // ONCHANGE INPUT FOR EDIT USER MODAL
+  const editOnchange = (e) => {
+    setEditUserInput({ ...editUserInput, [e.target.name]: e.target.value });
+  };
+
+  // TABLE DATA
   const tableSource = [
     {
-      title: "Name",
-      dataIndex: "fullName",
-      key: "fullName",
+      title: "First Name",
+      dataIndex: "firstName",
+      key: "firstName",
       fixed: "left",
       align: "center",
-      width: 150,
+      // width: 150,
     },
     {
-      title: "Email Address",
-      dataIndex: "email",
-      key: "email",
+      title: "Last Name",
+      dataIndex: "lastName",
+      key: "lastName",
+      fixed: "left",
       align: "center",
+      // width: 150,
     },
+    // {
+    //   title: "Email Address",
+    //   dataIndex: "email",
+    //   key: "email",
+    //   align: "center",
+    // },
     {
       title: "Mobile Number",
       dataIndex: "mobileNumber",
@@ -211,27 +337,27 @@ function Users() {
       key: "birthday,",
       align: "center",
     },
-    {
-      title: "Password",
-      key: "password",
-      align: "center",
-      render: (e, user) => (
-        <Button
-          style={{
-            backgroundColor: "#3061c9",
-            border: "none",
-            color: "white",
-            padding: 4,
-            borderRadius: "5px",
-            cursor: modalIsOpen ? "not-allowed" : "pointer",
-          }}
-          disabled={modalIsOpen}
-          onClick={openPModal}
-        >
-          Generate
-        </Button>
-      ),
-    },
+    // {
+    //   title: "Password",
+    //   key: "password",
+    //   align: "center",
+    //   render: (e, user) => (
+    //     <Button
+    //       style={{
+    //         backgroundColor: "#3061c9",
+    //         border: "none",
+    //         color: "white",
+    //         padding: 4,
+    //         borderRadius: "5px",
+    //         cursor: modalIsOpen ? "not-allowed" : "pointer",
+    //       }}
+    //       disabled={modalIsOpen}
+    //       onClick={openPModal}
+    //     >
+    //       Generate
+    //     </Button>
+    //   ),
+    // },
     {
       title: "Action",
       key: "action",
@@ -240,7 +366,12 @@ function Users() {
       render: (e, user) => {
         return (
           <div style={{ minWidth: "130px" }}>
-            <Button className="userEditBtn">EDIT</Button>
+            <Button
+              onClick={() => handleUserEdit(user)}
+              className="userEditBtn"
+            >
+              EDIT
+            </Button>
             <Button onClick={() => deleteUser(user.id)} className="userDelBtn">
               DELETE
             </Button>
@@ -271,7 +402,10 @@ function Users() {
               Add New User +
             </Button>
             <span className="usersPage__utils--search">
-              <SearchOutlined style={{ fontSize: "24px", color: "gray" }} />
+              <SearchOutlined
+                onClick={() => doSearch(searchInput)}
+                style={{ fontSize: "24px", color: "gray" }}
+              />
               <Input
                 className="search--input"
                 placeholder="Search User Here"
@@ -343,7 +477,7 @@ function Users() {
           isOpen={modalIsOpen}
           onRequestClose={closeModal}
           style={customStyles}
-          contentLabel="Example Modal"
+          contentLabel="Add User Modal"
           ariaHideApp={false}
         >
           <div
@@ -378,7 +512,7 @@ function Users() {
                     onChange={onChange}
                   />
                 </Form.Item>
-                <Form.Item>
+                {/* <Form.Item>
                   <h5>Email Address:</h5>
                   <Input
                     className="add-user-modal-input"
@@ -386,9 +520,7 @@ function Users() {
                     value={modalInput.email}
                     onChange={onChange}
                   />
-                </Form.Item>
-              </div>
-              <div className="bottom-inputs">
+                </Form.Item> */}
                 <Form.Item>
                   <h5>Phone Number:</h5>
                   <Input
@@ -399,6 +531,8 @@ function Users() {
                     type="number"
                   />
                 </Form.Item>
+              </div>
+              <div className="bottom-inputs">
                 <Form.Item>
                   <h5>Address:</h5>
                   <Input
@@ -417,8 +551,6 @@ function Users() {
                     onChange={onChange}
                   />
                 </Form.Item>
-              </div>
-              <div className="bottom-inputs">
                 <Form.Item>
                   <h5>Password:</h5>
                   <Input
@@ -428,6 +560,8 @@ function Users() {
                     onChange={onChange}
                   />
                 </Form.Item>
+              </div>
+              <div className="bottom-inputs">
                 <Form.Item>
                   <h5>Gender:</h5>
                   <select
@@ -489,6 +623,167 @@ function Users() {
             </Form>
             <div style={{ padding: ".5rem 1rem" }}>
               <Button onClick={okModal} className="add-user-modal-button">
+                Save
+              </Button>
+            </div>
+          </div>
+        </Modal>
+
+        {/* EDIT USER MODAL  */}
+        <Modal
+          isOpen={editModalVisible}
+          onRequestClose={closeEditModal}
+          style={editModalStyles}
+          contentLabel="Add User Modal"
+          ariaHideApp={false}
+        >
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+            }}
+          >
+            <div className="add-user-modal-header">
+              <h2>Update User</h2>{" "}
+              <h2
+                onClick={closeEditModal}
+                className="add-user-modal-close-icon"
+              >
+                X
+              </h2>
+            </div>
+            <Form className="add-user-modal-form">
+              <div className="top-inputs">
+                <Form.Item>
+                  <h5>First Name:</h5>
+                  <Input
+                    className="add-user-modal-input"
+                    name="firstName"
+                    value={editUserInput.firstName}
+                    onChange={editOnchange}
+                  />
+                </Form.Item>
+                <Form.Item>
+                  <h5>Last Name:</h5>
+                  <Input
+                    className="add-user-modal-input"
+                    name="lastName"
+                    value={editUserInput.lastName}
+                    onChange={editOnchange}
+                  />
+                </Form.Item>
+                {/* <Form.Item>
+                  <h5>Email Address:</h5>
+                  <Input
+                    className="add-user-modal-input"
+                    name="email"
+                    value={modalInput.email}
+                    onChange={onChange}
+                  />
+                </Form.Item> */}
+                <Form.Item>
+                  <h5>Phone Number:</h5>
+                  <Input
+                    className="add-user-modal-input"
+                    name="mobileNo"
+                    value={editUserInput.mobileNo}
+                    onChange={editOnchange}
+                    type="number"
+                  />
+                </Form.Item>
+              </div>
+              <div className="bottom-inputs">
+                <Form.Item>
+                  <h5>Address:</h5>
+                  <Input
+                    className="add-user-modal-input"
+                    name="address"
+                    value={editUserInput.address}
+                    onChange={editOnchange}
+                  />
+                </Form.Item>
+                <Form.Item>
+                  <h5>Birthday:</h5>
+                  <Input
+                    className="add-user-modal-input"
+                    name="birthDate"
+                    value={editUserInput.birthDate}
+                    onChange={editOnchange}
+                  />
+                </Form.Item>
+                <Form.Item>
+                  <h5>Password:</h5>
+                  <Input
+                    className="add-user-modal-input"
+                    name="password"
+                    placeholder="type new password"
+                    value={editUserInput.password}
+                    onChange={editOnchange}
+                  />
+                </Form.Item>
+              </div>
+              <div className="bottom-inputs">
+                <Form.Item>
+                  <h5>Gender:</h5>
+                  <select
+                    value={editUserInput.gender}
+                    onChange={(e) =>
+                      setEditUserInput({
+                        ...editUserInput,
+                        gender: e.target.value,
+                      })
+                    }
+                  >
+                    <option value="" selected disabled hidden>
+                      Choose Gender
+                    </option>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                  </select>
+                </Form.Item>
+
+                <Form.Item>
+                  <h5>Region:</h5>
+                  <select
+                    value={editUserInput.region}
+                    onChange={(e) => handleEditSelect(e.target.value)}
+                  >
+                    <option value="" selected disabled hidden>
+                      Choose Region
+                    </option>
+                    {regions.map((e, i) => (
+                      <option key={i} value={e._id}>
+                        {e.region}
+                      </option>
+                    ))}
+                  </select>
+                </Form.Item>
+                <Form.Item>
+                  <h5>Municipality:</h5>
+
+                  <select
+                    value={editUserInput.municipality}
+                    onChange={(e) =>
+                      setEditUserInput({
+                        ...editUserInput,
+                        municipalityId: e.target.value,
+                      })
+                    }
+                  >
+                    <option value="" selected disabled hidden>
+                      Choose Municipality
+                    </option>
+                    {municipalities.map((e, i) => (
+                      <option key={i} value={e._id}>
+                        {e.municipality}
+                      </option>
+                    ))}
+                  </select>
+                </Form.Item>
+              </div>
+            </Form>
+            <div style={{ padding: ".5rem 1rem" }}>
+              <Button onClick={okEditModal} className="add-user-modal-button">
                 Save
               </Button>
             </div>

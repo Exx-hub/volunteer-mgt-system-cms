@@ -44,17 +44,18 @@
 .loginPage__input {
   border: none;
   outline: none;
-  margin-left: 0.4rem;
+  margin-left: 0.25rem;
   background-color: white;
+  font-size: 14px;
 }
 
-input[type] {
-  color: black;
+.loginPage__form input[type] {
+  color: #2e418c;
 }
 
-input[type]::placeholder {
+.loginPage__form input[type]::placeholder {
   text-align: center;
-  color: black;
+  color: gray;
   font-size: 16px;
   font-weight: 300;
 }

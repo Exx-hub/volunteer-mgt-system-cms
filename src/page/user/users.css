@@ -178,12 +178,19 @@ h5 {
 
 .add-user-modal-form select {
   background-color: rgb(236, 236, 236);
-  width: 120px;
+  width: 198px;
   outline: none;
   border: none;
   border-radius: 8px;
   padding: 6px 15px;
   margin-bottom: 10px;
+}
+
+.add-user-modal-form input[type]::placeholder {
+  text-align: center;
+  color: gray;
+  font-size: 12px !important;
+  font-weight: 300;
 }
 
 .add-user-modal-button {
