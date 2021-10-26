@@ -30,6 +30,12 @@ const Region = {
   // delete municipality
   // get all municipalities
   // get municipality by region
+  getMunicipalityByRegionId: (regionId) => {
+    return axios({
+      method: "GET",
+      url: `${BASE_URL}/municipality/${regionId}`,
+    });
+  },
 };
 
 export default Region;

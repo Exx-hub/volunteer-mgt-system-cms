@@ -8,10 +8,10 @@ export const customStyles = {
     transform: "translate(-50%, -50%)",
     padding: 0,
     border: "none",
-    "box-shadow": "rgba(0, 0, 0, 0.24) 0px 3px 8px",
-    width: "50%",
+    boxShadow: "rgba(0, 0, 0, 0.24) 0px 3px 8px",
+    width: "40%",
     borderRadius: "12px",
-    minWidth: "900px",
+    minWidth: "800px",
   },
 };
 
@@ -25,63 +25,25 @@ export const pModalStyles = {
     transform: "translate(-50%, -50%)",
     padding: 0,
     border: "none",
-    "box-shadow": "rgba(0, 0, 0, 0.24) 0px 3px 8px",
+    boxShadow: "rgba(0, 0, 0, 0.24) 0px 3px 8px",
     width: "500px",
     opacity: 1,
     borderRadius: "12px",
   },
 };
 
-export const sampleUserData = [
-  {
-    firstName: "Alvin",
-    lastName: "Acosta",
-    email: "aa@gmail.com",
-    number: "09164209977",
-    address:
-      "21 Falcon St. west fairview quezon city 21 Falcon St. west fairview quezon city",
-    municipality: "Quezon City",
-    region: "NCR",
-    birthday: "6/16/87",
-  },
-  {
-    firstName: "Alvin",
-    lastName: "Acosta",
-    email: "aa@gmail.com",
-    number: "09164209977",
-    address: "21 Falcon St.",
-    municipality: "Quezon City",
-    region: "NCR",
-    birthday: "6/16/87",
-  },
-  {
-    firstName: "Alvin",
-    lastName: "Acosta",
-    email: "aa@gmail.com",
-    number: "09164209977",
-    address: "21 Falcon St.",
-    municipality: "Quezon City",
-    region: "NCR",
-    birthday: "6/16/87",
-  },
-  {
-    firstName: "Alvin",
-    lastName: "Acosta",
-    email: "aa@gmail.com",
-    number: "09164209977",
-    address: "21 Falcon St.",
-    municipality: "Quezon City",
-    region: "NCR",
-    birthday: "6/16/87",
-  },
-  {
-    firstName: "Alvin",
-    lastName: "Acosta",
-    email: "aa@gmail.com",
-    number: "09164209977",
-    address: "21 Falcon St.",
-    municipality: "Quezon City",
-    region: "NCR",
-    birthday: "6/16/87",
-  },
-];
+export const getRegion = (regionId) => {
+  switch (regionId) {
+    case "61765ca5c5017731f38c396f":
+      return "NCR";
+      break;
+
+    default:
+  }
+};
+
+// export const getMunicipality = (id) => {
+//   switch(id){
+//     case:
+//   }
+// }

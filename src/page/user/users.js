@@ -3,8 +3,11 @@ import React, { useEffect, useState } from "react";
 import "./users.css";
 import { SearchOutlined } from "@ant-design/icons";
 import Modal from "react-modal";
-import { pModalStyles, customStyles, sampleUserData } from "./utils";
-import Admin from "../../service/Admin";
+import moment from "moment-timezone";
+
+import { pModalStyles, customStyles, getRegion } from "./utils";
+import AppUser from "../../service/AppUser";
+import Region from "../../service/Region";
 
 const { Content } = Layout;
 
@@ -16,45 +19,78 @@ function Users() {
     firstName: "",
     lastName: "",
     email: "",
-    number: "",
+    mobileNo: "",
     address: "",
+    birthDate: "",
+    gender: "",
+    regionId: "",
+    municipalityId: "",
+    password: "",
   });
   const [passwordInput, setPasswordInput] = useState("");
   const [confirmInput, setConfirmInput] = useState("");
 
-  // parses data when data is available
-  useEffect(() => {
-    // when component renders, call api to get users, then parse data into records array
-    // to display in table
-    // getAllUsers....
-    // User.getAllUsers().then((e) => {
-    //   const { data } = e.data;
-    //   console.log(data);
-    // });
+  const [regions, setRegions] = useState([]);
+  const [municipalities, setMunicipalities] = useState([]);
+  const [selectedRegion, setSelectedRegion] = useState(null);
+  const [data, setData] = useState([]);
+  const [records, setRecords] = useState([]);
 
-    // call this function when data is retrieved from backend api
-    parseTableData();
+  // console.log(selectedRegion);
+
+  useEffect(() => {
+    AppUser.getAllAppUsers().then((e) => {
+      const { data } = e.data;
+      // console.log(data);
+
+      setData(data);
+    });
+
+    Region.getRegionList().then((e) => {
+      const { data } = e.data;
+      // console.log(data);
+      setRegions(data);
+    });
   }, []);
 
-  // hard coded data --- but this data needs to be retrieved from backend
-  const [data, setData] = useState(sampleUserData);
+  useEffect(() => {
+    if (selectedRegion) {
+      Region.getMunicipalityByRegionId(selectedRegion).then((e) => {
+        const { data } = e.data;
+        console.log("MUNI:", data);
+        setMunicipalities(data);
+      });
+    }
+  }, [selectedRegion]);
 
-  // initial data table -- starts empty, gets data when parsed
-  const [records, setRecords] = useState([]);
+  useEffect(() => {
+    if (data.length > 0) {
+      parseTableData();
+    }
+  }, [data]);
+
+  const handleSelect = (regionId) => {
+    setModalInput({ ...modalInput, regionId });
+    setSelectedRegion(regionId);
+  };
 
   // parses data from backend
   const parseTableData = () => {
     const record = data.map((e, i) => {
+      // console.log(e);
       return {
         key: i,
-        firstName: e.firstName,
-        lastName: e.lastName,
+        fullName: e.fullName,
         email: e.email,
-        mobileNumber: e.number,
+        mobileNumber: e.mobileNo,
         address: e.address,
-        municipality: e.municipality,
-        region: e.region,
-        birthday: e.birthday,
+        municipality: "Quezon City",
+        region: "NCR",
+        birthday: "Oct 26,2001",
+        // municipality: e.municipality,
+        // region: e.region,
+        // birthday: moment.tz(e.birthDate).format("MMM DD, YYYY"),
+        id: e._id,
       };
     });
     setRecords(record);
@@ -83,8 +119,46 @@ function Users() {
 
   const okModal = () => {
     setIsOpen(false);
-    alert("call api to add user");
+
     console.log(modalInput);
+
+    // call add user api here
+    AppUser.addAppUser(
+      modalInput.firstName,
+      modalInput.lastName,
+      modalInput.email,
+      modalInput.mobileNo,
+      modalInput.address,
+      modalInput.birthDate,
+      modalInput.regionId,
+      modalInput.municipalityId,
+      modalInput.gender,
+      modalInput.password
+    ).then((e) => {
+      const { data } = e.data;
+      console.log(data);
+      setModalInput({
+        firstName: "",
+        lastName: "",
+        email: "",
+        mobileNo: "",
+        address: "",
+        birthDate: "",
+        gender: "",
+        regionId: "",
+        municipalityId: "",
+        password: "",
+      });
+      window.location.reload();
+    });
+  };
+
+  const deleteUser = (id) => {
+    AppUser.deleteAppUser(id).then((e) => {
+      const { data } = e.data;
+      console.log(data);
+      window.location.reload();
+    });
   };
 
   const onChange = (e) => {
@@ -93,18 +167,12 @@ function Users() {
 
   const tableSource = [
     {
-      title: "First Name",
-      dataIndex: "firstName",
-      key: "firstName",
+      title: "Name",
+      dataIndex: "fullName",
+      key: "fullName",
       fixed: "left",
       align: "center",
       width: 150,
-    },
-    {
-      title: "Last Name",
-      dataIndex: "lastName",
-      key: "lastName",
-      align: "center",
     },
     {
       title: "Email Address",
@@ -169,11 +237,13 @@ function Users() {
       key: "action",
       align: "center",
       width: 180,
-      render: (user) => {
+      render: (e, user) => {
         return (
           <div style={{ minWidth: "130px" }}>
             <Button className="userEditBtn">EDIT</Button>
-            <Button className="userDelBtn">DELETE</Button>
+            <Button onClick={() => deleteUser(user.id)} className="userDelBtn">
+              DELETE
+            </Button>
           </div>
         );
       },
@@ -280,7 +350,6 @@ function Users() {
             style={{
               display: "flex",
               flexDirection: "column",
-              // backgroundColor: "#f8bc29",
             }}
           >
             <div className="add-user-modal-header">
@@ -318,18 +387,18 @@ function Users() {
                     onChange={onChange}
                   />
                 </Form.Item>
+              </div>
+              <div className="bottom-inputs">
                 <Form.Item>
                   <h5>Phone Number:</h5>
                   <Input
                     className="add-user-modal-input"
-                    name="number"
+                    name="mobileNo"
                     value={modalInput.number}
                     onChange={onChange}
                     type="number"
                   />
                 </Form.Item>
-              </div>
-              <div className="bottom-inputs">
                 <Form.Item>
                   <h5>Address:</h5>
                   <Input
@@ -341,15 +410,80 @@ function Users() {
                 </Form.Item>
                 <Form.Item>
                   <h5>Birthday:</h5>
-                  <Input className="add-user-modal-input" />
+                  <Input
+                    className="add-user-modal-input"
+                    name="birthDate"
+                    value={modalInput.birthDate}
+                    onChange={onChange}
+                  />
+                </Form.Item>
+              </div>
+              <div className="bottom-inputs">
+                <Form.Item>
+                  <h5>Password:</h5>
+                  <Input
+                    className="add-user-modal-input"
+                    name="password"
+                    value={modalInput.password}
+                    onChange={onChange}
+                  />
                 </Form.Item>
                 <Form.Item>
+                  <h5>Gender:</h5>
+                  <select
+                    value={modalInput.gender}
+                    onChange={(e) =>
+                      setModalInput({
+                        ...modalInput,
+                        gender: e.target.value,
+                      })
+                    }
+                  >
+                    <option value="" selected disabled hidden>
+                      Choose Gender
+                    </option>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                  </select>
+                </Form.Item>
+
+                <Form.Item>
                   <h5>Region:</h5>
-                  <Input className="add-user-modal-input" />
+                  <select
+                    value={modalInput.region}
+                    onChange={(e) => handleSelect(e.target.value)}
+                  >
+                    <option value="" selected disabled hidden>
+                      Choose Region
+                    </option>
+                    {regions.map((e, i) => (
+                      <option key={i} value={e._id}>
+                        {e.region}
+                      </option>
+                    ))}
+                  </select>
                 </Form.Item>
                 <Form.Item>
                   <h5>Municipality:</h5>
-                  <Input className="add-user-modal-input" />
+
+                  <select
+                    value={modalInput.municipality}
+                    onChange={(e) =>
+                      setModalInput({
+                        ...modalInput,
+                        municipalityId: e.target.value,
+                      })
+                    }
+                  >
+                    <option value="" selected disabled hidden>
+                      Choose Municipality
+                    </option>
+                    {municipalities.map((e, i) => (
+                      <option key={i} value={e._id}>
+                        {e.municipality}
+                      </option>
+                    ))}
+                  </select>
                 </Form.Item>
               </div>
             </Form>

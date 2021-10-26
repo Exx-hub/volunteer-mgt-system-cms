@@ -36,7 +36,8 @@ const AppUser = {
     birthDate,
     regionId,
     municipalityId,
-    gender
+    gender,
+    password
   ) => {
     return axios({
       method: "POST",
@@ -46,11 +47,12 @@ const AppUser = {
         firstName: firstName,
         lastName: lastName,
         address: address,
-        // gender: gender,
+        gender: gender,
         birthDate: birthDate,
         email: email,
         regionId: regionId,
         municipalityId: municipalityId,
+        password: password,
       },
     });
   },
@@ -66,7 +68,8 @@ const AppUser = {
     birthDate,
     regionId,
     municipalityId,
-    gender
+    gender,
+    password
   ) => {
     return axios({
       method: "PUT",
@@ -76,11 +79,12 @@ const AppUser = {
         firstName: firstName,
         lastName: lastName,
         address: address,
-        // gender: gender,
+        gender: gender,
         birthDate: birthDate,
         email: email,
         regionId: regionId,
         municipalityId: municipalityId,
+        password: password,
       },
     });
   },
