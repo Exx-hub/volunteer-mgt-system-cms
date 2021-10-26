@@ -96,7 +96,12 @@ function Users() {
   // FILTER TABLE DATA WHEN SEARCH IS CLICKED
   const doSearch = (text) => {
     const filtered = records.filter((record) => {
-      return record.fullName.includes(text);
+      return (
+        record.firstName.toLowerCase().includes(text) ||
+        record.lastName.toLowerCase().includes(text) ||
+        record.firstName.toUpperCase().includes(text) ||
+        record.lastName.toUpperCase().includes(text)
+      );
     });
 
     setRecords(filtered);
@@ -381,6 +386,13 @@ function Users() {
     },
   ];
 
+  const handleKeypress = (e) => {
+    console.log(e.key);
+    if (e.key === "Enter") {
+      doSearch(searchInput);
+    }
+  };
+
   return (
     <>
       <Layout className="usersPage__container">
@@ -411,6 +423,7 @@ function Users() {
                 placeholder="Search User Here"
                 value={searchInput}
                 onChange={(e) => setSearchInput(e.target.value)}
+                onKeyPress={(e) => handleKeypress(e)}
               />
             </span>
           </Row>
