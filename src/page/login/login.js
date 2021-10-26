@@ -4,7 +4,7 @@ import bg from "../../assets/images/loginBg.jpg";
 import { Image, Form, Input, Button, Spin, Checkbox } from "antd";
 import { UserOutlined, LockOutlined, LoadingOutlined } from "@ant-design/icons";
 import { useHistory } from "react-router";
-import User from "../../service/User";
+import Admin from "../../service/Admin";
 import { UserProfile } from "../../utility";
 
 function Login() {
@@ -38,7 +38,7 @@ function Login() {
     //   history.push("/home");
     // }, 2000);
 
-    User.login(username, password)
+    Admin.login(username, password)
       .then((e) => {
         const { data } = e.data;
         console.log("FRESH FROM LOGIN FETCH:", e.data);

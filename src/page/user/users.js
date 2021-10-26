@@ -4,6 +4,7 @@ import "./users.css";
 import { SearchOutlined } from "@ant-design/icons";
 import Modal from "react-modal";
 import { pModalStyles, customStyles, sampleUserData } from "./utils";
+import Admin from "../../service/Admin";
 
 const { Content } = Layout;
 
@@ -26,6 +27,10 @@ function Users() {
     // when component renders, call api to get users, then parse data into records array
     // to display in table
     // getAllUsers....
+    // User.getAllUsers().then((e) => {
+    //   const { data } = e.data;
+    //   console.log(data);
+    // });
 
     // call this function when data is retrieved from backend api
     parseTableData();
