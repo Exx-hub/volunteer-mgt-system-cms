@@ -598,7 +598,7 @@ function Users() {
                 <Form.Item>
                   <h5>Region:</h5>
                   <select
-                    value={modalInput.region}
+                    value={modalInput.regionId}
                     onChange={(e) => handleSelect(e.target.value)}
                   >
                     <option value="" selected disabled hidden>

@@ -37,6 +37,11 @@ function RegionalNews() {
     description: "",
   });
 
+  const [preview, setPreview] = useState({
+    headline: "",
+    description: "",
+  });
+
   // console.log("EDIT NEWS INPUT:", editNewsInput);
 
   // console.log(selectedRegion);
@@ -155,15 +160,10 @@ function RegionalNews() {
     });
   };
 
-  const [preview, setPreview] = useState({
-    headline: "",
-    description: "",
-  });
-
   const openViewModal = (item) => {
     setViewModalOpen(true);
 
-    console.log(item);
+    // console.log(item);
 
     setPreview({
       headline: item.headline,

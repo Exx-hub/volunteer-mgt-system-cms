@@ -197,6 +197,7 @@ input[type]::placeholder {
 
 .form-div {
   display: flex;
+  flex-direction: column;
   align-items: center;
   margin-bottom: 10px;
 }
@@ -229,4 +230,52 @@ input[type]::placeholder {
   box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px,
     rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
   cursor: pointer;
+}
+
+.viewBulletin-modal-header {
+  background-color: #da3748;
+  padding: 8px 20px;
+  color: white;
+  position: relative;
+  text-align: center;
+}
+
+.viewBulletin-modal-header h2 {
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.viewBulletin-modal-close-icon {
+  position: absolute;
+  top: 7px;
+  right: 10px;
+  cursor: pointer;
+}
+
+.viewBulletin-modal-body {
+  padding: 20px;
+  text-align: center;
+}
+.viewBulletin-modal-headline {
+  font-size: 24px;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+.viewBulletin-modal-desc {
+  font-size: 16px;
+  word-wrap: break-word;
+}
+
+.ReactModal__Overlay {
+  background-color: rgba(0, 0, 0, 0.6) !important;
+  opacity: 0;
+  transition: opacity 500ms ease-in-out;
+}
+
+.ReactModal__Overlay--after-open {
+  opacity: 1;
+}
+
+.ReactModal__Overlay--before-close {
+  opacity: 0;
 }

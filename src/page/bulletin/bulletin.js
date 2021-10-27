@@ -4,11 +4,12 @@ import { Layout, Row, Col, Button, Table, Form, Input } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
 import Modal from "react-modal";
 import {
-  sampleUserData,
-  sampleRegionData,
   announcementModalStyles,
   viewAnnouncementModalStyles,
+  editAnnouncementModalStyles,
 } from "./utils";
+import BulletinService from "../../service/Bulletin";
+import Region from "../../service/Region";
 
 const { Content } = Layout;
 const { TextArea } = Input;
@@ -20,76 +21,85 @@ function Bulletin() {
   const [addModalInput, setAddModalInput] = useState({
     title: "",
     category: "",
-    region: "",
-    municipality: "",
+    regionId: "",
     description: "",
   });
 
   console.log(addModalInput);
 
+  const [data, setData] = useState([]);
+  const [records, setRecords] = useState([]);
+
+  const [regions, setRegions] = useState([]);
+
+  const [preview, setPreview] = useState({
+    title: "",
+    description: "",
+  });
+
   // parses data when data is available
   useEffect(() => {
-    // when component renders, call api to get users, then parse data into records array
-    // to display in table
-    // getAllUsers....
+    BulletinService.getAllBulletin().then((e) => {
+      const { data } = e.data;
+      // console.log(data);
+      setData(data);
+    });
 
-    // call this function when data is retrieved from backend api
-    parseTableData();
-
-    // get regions and municipalities from backend? now from hardcoded utils only
-    setRegions(sampleRegionData);
+    Region.getRegionList().then((e) => {
+      const { data } = e.data;
+      // console.log(data);
+      setRegions(data);
+    });
   }, []);
 
-  // hard coded data --- but this data needs to be retrieved from backend
-  const [data, setData] = useState(sampleUserData);
-
-  // initial data table -- starts empty, gets data when parsed
-  const [records, setRecords] = useState([]);
+  // PARSES RECORDS
+  useEffect(() => {
+    if (data.length > 0 || searchInput === "") {
+      parseTableData();
+    }
+  }, [data, searchInput]);
 
   // parses data from backend
   const parseTableData = () => {
     const record = data.map((e, i) => {
+      // console.log(e);
       return {
         key: i,
+        id: e._id,
+        regionId: e.regionId,
         title: e.title,
         description: e.description,
-        category: e.category,
+        category: e.isRegional === 0 ? "Nationwide" : "Regional",
       };
     });
     setRecords(record);
   };
 
-  const [regions, setRegions] = useState([]);
+  // FILTER TABLE DATA WHEN SEARCH IS CLICKED
+  const doSearch = (text) => {
+    const filtered = records.filter((record) => {
+      return (
+        record.title.toLowerCase().includes(text) ||
+        record.title.toUpperCase().includes(text)
+      );
+    });
 
-  // HARD CODED WAY OF GETTING REGION THEN MUNICIPALITY
-  const [selectedRegion, setSelectedRegion] = useState(null);
+    setRecords(filtered);
+  };
 
-  const [municipalities, setMunicipalities] = useState([]);
+  const handleKeypress = (e) => {
+    if (e.key === "Enter") {
+      doSearch(searchInput);
+    }
+  };
 
   const handleModalInputChange = (e) => {
     setAddModalInput({ ...addModalInput, [e.target.name]: e.target.value });
   };
 
-  const handleSelect = (region) => {
-    setAddModalInput({ ...addModalInput, region });
-    setSelectedRegion(region);
-  };
-
-  useEffect(() => {
-    if (selectedRegion) {
-      setMunicipalities(getMunicipalities(selectedRegion));
-    }
-  }, [selectedRegion]);
-
-  // this is the backend api to get municipality depending on regions
-  // service.getMunicipalities(region) to get municipalities of a region to
-  // populate municipality select...get an array of municipalities
-  const getMunicipalities = (e) => {
-    if (e === "NCR") {
-      return ["QC", "PASIG", "MANILA"];
-    } else if (e === "CAT") {
-      return ["BICOL", "NAGA", "CARAMOAN"];
-    }
+  const handleSelect = (regionId) => {
+    setAddModalInput({ ...addModalInput, regionId });
+    // setSelectedRegion(regionId);
   };
 
   const openModal = () => {
@@ -101,21 +111,44 @@ function Bulletin() {
   };
 
   const okModal = () => {
-    //clear fields and state
-    setAddModalInput({
-      title: "",
-      category: "",
-      region: "",
-      municipality: "",
-      description: "",
-    });
     setIsOpen(false);
-    // send values to backend to ADD news
+
     console.log("FROM ADD MODAL:", addModalInput);
+
+    BulletinService.addBulletin(
+      addModalInput.title,
+      addModalInput.description,
+      addModalInput.category,
+      addModalInput.regionId
+    ).then((e) => {
+      const { data } = e.data;
+      console.log(data);
+
+      setAddModalInput({
+        title: "",
+        category: "",
+        region: "",
+        description: "",
+      });
+
+      window.location.reload(); // replace with success prompt
+    });
   };
 
-  const openViewModal = () => {
+  const deleteBulletinById = (id) => {
+    BulletinService.deleteBulletin(id).then((e) => {
+      const { data } = e.data;
+      window.location.reload(); // replace with success prompt
+    });
+  };
+
+  const openViewModal = (item) => {
     setViewModalOpen(true);
+
+    setPreview({
+      title: item.title,
+      description: item.description,
+    });
   };
 
   const closeViewModal = () => {
@@ -146,11 +179,19 @@ function Bulletin() {
       key: "actions",
       align: "center",
       width: 250,
-      render: (e, newsItem) => (
+      render: (e, bulletinItem) => (
         <>
           <Button className="bulletin__editBtn">EDIT</Button>
-          <Button className="bulletin__deleteBtn">DELETE</Button>
-          <Button onClick={openViewModal} className="bulletin__viewBtn">
+          <Button
+            onClick={() => deleteBulletinById(bulletinItem.id)}
+            className="bulletin__deleteBtn"
+          >
+            DELETE
+          </Button>
+          <Button
+            onClick={() => openViewModal(bulletinItem)}
+            className="bulletin__viewBtn"
+          >
             VIEW
           </Button>
         </>
@@ -171,12 +212,16 @@ function Bulletin() {
             Add Announcement for Events & Campaign +
           </Button>
           <span className="bulletin__utils--search">
-            <SearchOutlined style={{ fontSize: "24px", color: "gray" }} />
+            <SearchOutlined
+              onClick={() => doSearch(searchInput)}
+              style={{ fontSize: "24px", color: "gray" }}
+            />
             <Input
               className="bulletin__search--input"
               placeholder="Search News"
               value={searchInput}
               onChange={(e) => setSearchInput(e.target.value)}
+              onKeyPress={(e) => handleKeypress(e)}
             />
           </span>
         </Row>
@@ -194,6 +239,7 @@ function Bulletin() {
 
       {/* ADD ANNOUNCEMENT MODAL  */}
       <Modal
+        ariaHideApp={false}
         isOpen={modalIsOpen}
         onRequestClose={closeModal}
         style={announcementModalStyles}
@@ -243,39 +289,20 @@ function Bulletin() {
                   <option value="regional">Regional</option>
                 </select>
               </Form.Item>
-            </div>
-
-            <div className="form-div">
               <Form.Item>
                 <h5>Region:</h5>
                 <select
-                  value={addModalInput.region}
+                  disabled={addModalInput.category === "nationwide"}
+                  value={addModalInput.regionId}
                   onChange={(e) => handleSelect(e.target.value)}
                 >
                   <option value="" selected disabled hidden>
                     Choose Region
                   </option>
                   {regions.map((e, i) => (
-                    <option value={e.region}>{e.region}</option>
-                  ))}
-                </select>
-              </Form.Item>
-              <Form.Item>
-                <h5>Municipality:</h5>
-                <select
-                  value={addModalInput.municipality}
-                  onChange={(e) =>
-                    setAddModalInput({
-                      ...addModalInput,
-                      municipality: e.target.value,
-                    })
-                  }
-                >
-                  <option value="" selected disabled hidden>
-                    Choose Municipality
-                  </option>
-                  {municipalities.map((e, i) => (
-                    <option value={e}>{e}</option>
+                    <option key={i} value={e._id}>
+                      {e.region}
+                    </option>
                   ))}
                 </select>
               </Form.Item>
@@ -284,7 +311,7 @@ function Bulletin() {
             <Form.Item className="textarea-div">
               <h5>Description:</h5>
               <TextArea
-                rows={4}
+                rows={8}
                 name="description"
                 value={addModalInput.description}
                 onChange={(e) => handleModalInputChange(e)}
@@ -299,6 +326,7 @@ function Bulletin() {
 
       {/* VIEW ANNOUNCEMENT MODAL  */}
       <Modal
+        ariaHideApp={false}
         isOpen={viewModalOpen}
         onRequestClose={closeViewModal}
         style={viewAnnouncementModalStyles}
@@ -310,22 +338,21 @@ function Bulletin() {
             flexDirection: "column",
           }}
         >
-          <div className="addAnnouncement-modal-header">
+          <div className="viewBulletin-modal-header">
             <h2>PREVIEW</h2>{" "}
             <h2
-              className="addAnnouncement-modal-close-icon"
+              className="viewBulletin-modal-close-icon"
               onClick={closeViewModal}
             >
               X
             </h2>
           </div>
           <div>
-            <div>COVID PAWALA NA NGA BA</div>
-            <div>
-              Dolore nostrud incididunt anim labore sunt sint. Enim consequat
-              cillum laboris ut dolore laborum in. Est exercitation ullamco sit
-              ullamco ullamco sit duis. Commodo cillum dolore id pariatur qui
-              consequat ut exercitation cupidatat ipsum ullamco.
+            <div className="viewBulletin-modal-body">
+              <div className="viewBulletin-modal-headline">{preview.title}</div>
+              <div className="viewBulletin-modal-desc">
+                {preview.description}
+              </div>
             </div>
           </div>
         </div>

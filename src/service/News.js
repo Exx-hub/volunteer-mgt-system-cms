@@ -25,7 +25,7 @@ const News = {
       },
     });
   },
-  // get news by id?
+
   // update news?
   updateNews: (newsId, headline, description, regionId, municipalityId) => {
     return axios({
@@ -46,6 +46,8 @@ const News = {
       url: `${BASE_URL}/news/deleteNews/${newsId}`,
     });
   },
+
+  // get news by id?
 };
 
 export default News;
