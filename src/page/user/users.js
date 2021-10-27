@@ -170,6 +170,19 @@ function Users() {
 
   const closeModal = () => {
     setIsOpen(false);
+
+    setModalInput({
+      firstName: "",
+      lastName: "",
+      // email: "",
+      mobileNo: "",
+      address: "",
+      birthDate: "",
+      gender: "",
+      regionId: "",
+      municipalityId: "",
+      password: "",
+    });
   };
 
   // ADD USER WHEN MODAL IS SUBMITTED
@@ -274,9 +287,8 @@ function Users() {
       address: user.address,
       birthDate: user.birthday,
       gender: user.gender,
-      // regionId: user.regionId,
-      // regionId: "",
-      // municipalityId: user.municipalityId,
+      regionId: "",
+      municipalityId: "",
       password: "",
       id: user.id,
     });

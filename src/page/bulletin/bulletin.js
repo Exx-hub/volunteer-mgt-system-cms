@@ -24,18 +24,24 @@ function Bulletin() {
     regionId: "",
     description: "",
   });
-
-  console.log(addModalInput);
-
+  const [editModalVisible, setEditModalVisible] = useState(false);
+  const [editModalInput, setEditModalInput] = useState({
+    title: "",
+    category: "",
+    regionId: "",
+    description: "",
+  });
   const [data, setData] = useState([]);
   const [records, setRecords] = useState([]);
-
   const [regions, setRegions] = useState([]);
-
   const [preview, setPreview] = useState({
     title: "",
     description: "",
   });
+
+  console.log(editModalInput);
+
+  console.log(addModalInput);
 
   // parses data when data is available
   useEffect(() => {
@@ -97,9 +103,17 @@ function Bulletin() {
     setAddModalInput({ ...addModalInput, [e.target.name]: e.target.value });
   };
 
+  const handleEditModalInputChange = (e) => {
+    setEditModalInput({ ...editModalInput, [e.target.name]: e.target.value });
+  };
+
   const handleSelect = (regionId) => {
     setAddModalInput({ ...addModalInput, regionId });
     // setSelectedRegion(regionId);
+  };
+
+  const handleEditSelect = (regionId) => {
+    setEditModalInput({ ...editModalInput, regionId });
   };
 
   const openModal = () => {
@@ -108,6 +122,13 @@ function Bulletin() {
 
   const closeModal = () => {
     setIsOpen(false);
+
+    setAddModalInput({
+      title: "",
+      category: "",
+      region: "",
+      description: "",
+    });
   };
 
   const okModal = () => {
@@ -155,6 +176,56 @@ function Bulletin() {
     setViewModalOpen(false);
   };
 
+  const openEditModal = () => {
+    setEditModalVisible(true);
+  };
+
+  const closeEditModal = () => {
+    setEditModalVisible(false);
+  };
+
+  // SETS VALUES OF CLICKED ITEM TO EDIT
+  const handleItemEdit = (item) => {
+    setEditModalInput({
+      ...editModalInput,
+      title: item.title,
+      description: item.description,
+      category: "",
+      regionId: "",
+      id: item.id,
+    });
+
+    openEditModal();
+    console.log(item);
+  };
+
+  // UPDATE USER WHEN MODAL SUBMITTED
+  const okEditModal = () => {
+    setEditModalVisible(false);
+    console.log(editModalInput);
+
+    BulletinService.updateBulletin(
+      editModalInput.id,
+      editModalInput.title,
+      editModalInput.description,
+      editModalInput.category,
+      editModalInput.regionId
+    ).then((e) => {
+      const { data } = e.data;
+
+      console.log(data);
+
+      setEditModalInput({
+        title: "",
+        category: "",
+        regionId: "",
+        description: "",
+      });
+
+      window.location.reload(); // replace with success prompt
+    });
+  };
+
   const tableSource = [
     {
       title: "Title",
@@ -181,7 +252,12 @@ function Bulletin() {
       width: 250,
       render: (e, bulletinItem) => (
         <>
-          <Button className="bulletin__editBtn">EDIT</Button>
+          <Button
+            onClick={() => handleItemEdit(bulletinItem)}
+            className="bulletin__editBtn"
+          >
+            EDIT
+          </Button>
           <Button
             onClick={() => deleteBulletinById(bulletinItem.id)}
             className="bulletin__deleteBtn"
@@ -292,7 +368,10 @@ function Bulletin() {
               <Form.Item>
                 <h5>Region:</h5>
                 <select
-                  disabled={addModalInput.category === "nationwide"}
+                  disabled={
+                    addModalInput.category === "nationwide" ||
+                    !addModalInput.category
+                  }
                   value={addModalInput.regionId}
                   onChange={(e) => handleSelect(e.target.value)}
                 >
@@ -311,7 +390,7 @@ function Bulletin() {
             <Form.Item className="textarea-div">
               <h5>Description:</h5>
               <TextArea
-                rows={8}
+                rows={10}
                 name="description"
                 value={addModalInput.description}
                 onChange={(e) => handleModalInputChange(e)}
@@ -355,6 +434,99 @@ function Bulletin() {
               </div>
             </div>
           </div>
+        </div>
+      </Modal>
+
+      {/* EDIT ANNOUNCEMENT MODAL */}
+      <Modal
+        ariaHideApp={false}
+        isOpen={editModalVisible}
+        onRequestClose={closeEditModal}
+        style={editAnnouncementModalStyles}
+        contentLabel="Edit Announcement Modal"
+      >
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+          }}
+        >
+          <div className="addAnnouncement-modal-header">
+            <h2>Edit Announcement</h2>{" "}
+            <h2
+              className="addAnnouncement-modal-close-icon"
+              onClick={closeEditModal}
+            >
+              X
+            </h2>
+          </div>
+
+          <Form className="addAnnouncement-modal-form">
+            <div className="form-div">
+              <Form.Item>
+                <h5>Title:</h5>
+                <Input
+                  name="title"
+                  value={editModalInput.title}
+                  onChange={(e) => handleEditModalInputChange(e)}
+                />
+              </Form.Item>
+              <Form.Item>
+                <h5>Category:</h5>
+                <select
+                  value={editModalInput.category}
+                  onChange={(e) =>
+                    setEditModalInput({
+                      ...editModalInput,
+                      category: e.target.value,
+                    })
+                  }
+                >
+                  <option value="" selected disabled hidden>
+                    Choose Category
+                  </option>
+                  <option value="nationwide">Nationwide</option>
+                  <option value="regional">Regional</option>
+                </select>
+              </Form.Item>
+              <Form.Item>
+                <h5>Region:</h5>
+                <select
+                  disabled={
+                    editModalInput.category === "nationwide" ||
+                    !editModalInput.category
+                  }
+                  value={editModalInput.regionId}
+                  onChange={(e) => handleEditSelect(e.target.value)}
+                >
+                  <option value="" selected disabled hidden>
+                    Choose Region
+                  </option>
+                  {regions.map((e, i) => (
+                    <option key={i} value={e._id}>
+                      {e.region}
+                    </option>
+                  ))}
+                </select>
+              </Form.Item>
+            </div>
+
+            <Form.Item className="textarea-div">
+              <h5>Description:</h5>
+              <TextArea
+                rows={10}
+                name="description"
+                value={editModalInput.description}
+                onChange={(e) => handleEditModalInputChange(e)}
+              />
+            </Form.Item>
+          </Form>
+          <Button
+            onClick={okEditModal}
+            className="addAnnouncement-modal-button"
+          >
+            Submit
+          </Button>
         </div>
       </Modal>
     </Layout>

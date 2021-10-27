@@ -132,6 +132,13 @@ function RegionalNews() {
 
   const closeModal = () => {
     setIsOpen(false);
+
+    setAddNewsInput({
+      regionId: "",
+      municipality: "",
+      headline: "",
+      description: "",
+    });
   };
 
   // ADD NEWS WHEN MODAL IS SUBMITTED
@@ -235,8 +242,8 @@ function RegionalNews() {
   const handleNewsEdit = (newsItem) => {
     setEditNewsInput({
       ...editNewsInput,
-      // regionId: newsItem.region,
-      // municipalityId: user.municipalityId,
+      regionId: "",
+      municipalityId: "",
       headline: newsItem.headline,
       description: newsItem.description,
       id: newsItem.id,

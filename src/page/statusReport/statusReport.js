@@ -65,6 +65,11 @@ function StatusReport() {
 
   const closeModal = () => {
     setIsOpen(false);
+
+    setAddMuniInput({
+      regionId: "",
+      municipality: "",
+    });
   };
 
   // add municipality to selected region
