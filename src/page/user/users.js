@@ -93,6 +93,32 @@ function Users() {
     }
   }, [data, searchInput]);
 
+  // parses data from backend
+  const parseTableData = () => {
+    const record = data.map((e, i) => {
+      console.log(e);
+      return {
+        key: i,
+        id: e._id,
+        // fullName: e.fullName,
+        firstName: e.firstName,
+        lastName: e.lastName,
+        password: e.password,
+        gender: e.gender,
+        // email: e.email,
+        mobileNumber: e.mobileNo,
+        address: e.address,
+        municipality: e.municipality,
+        region: e.region,
+        municipalityId: e.municipalityId,
+        regionId: e.regionId,
+        birthday: "Oct 26,2001",
+        // birthday: moment.tz(e.birthDate).format("MMM DD, YYYY"),
+      };
+    });
+    setRecords(record);
+  };
+
   // FILTER TABLE DATA WHEN SEARCH IS CLICKED
   const doSearch = (text) => {
     const filtered = records.filter((record) => {
@@ -124,32 +150,6 @@ function Users() {
   const handleEditSelect = (regionId) => {
     setEditUserInput({ ...editUserInput, regionId });
     setSelectedRegion(regionId);
-  };
-
-  // parses data from backend
-  const parseTableData = () => {
-    const record = data.map((e, i) => {
-      console.log(e);
-      return {
-        key: i,
-        id: e._id,
-        // fullName: e.fullName,
-        firstName: e.firstName,
-        lastName: e.lastName,
-        password: e.password,
-        gender: e.gender,
-        // email: e.email,
-        mobileNumber: e.mobileNo,
-        address: e.address,
-        municipality: e.municipality,
-        region: e.region,
-        municipalityId: e.municipalityId,
-        regionId: e.regionId,
-        birthday: "Oct 26,2001",
-        // birthday: moment.tz(e.birthDate).format("MMM DD, YYYY"),
-      };
-    });
-    setRecords(record);
   };
 
   const openPModal = () => {
@@ -194,6 +194,7 @@ function Users() {
     ).then((e) => {
       const { data } = e.data;
       console.log(data);
+
       setModalInput({
         firstName: "",
         lastName: "",
@@ -206,6 +207,7 @@ function Users() {
         municipalityId: "",
         password: "",
       });
+
       window.location.reload(); // replace with success prompt
     });
   };
@@ -343,12 +345,12 @@ function Users() {
       key: "region",
       align: "center",
     },
-    {
-      title: "Birthday",
-      dataIndex: "birthday",
-      key: "birthday,",
-      align: "center",
-    },
+    // {
+    //   title: "Birthday",
+    //   dataIndex: "birthday",
+    //   key: "birthday,",
+    //   align: "center",
+    // },
     // {
     //   title: "Password",
     //   key: "password",
@@ -758,7 +760,7 @@ function Users() {
                 <Form.Item>
                   <h5>Region:</h5>
                   <select
-                    value={editUserInput.region}
+                    value={editUserInput.regionId}
                     onChange={(e) => handleEditSelect(e.target.value)}
                   >
                     <option value="" selected disabled hidden>
@@ -775,7 +777,7 @@ function Users() {
                   <h5>Municipality:</h5>
 
                   <select
-                    value={editUserInput.municipality}
+                    value={editUserInput.municipalityId}
                     onChange={(e) =>
                       setEditUserInput({
                         ...editUserInput,

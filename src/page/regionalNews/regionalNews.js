@@ -3,12 +3,9 @@ import "./regionalNews.css";
 import { Layout, Row, Col, Button, Table, Form, Input } from "antd";
 import { LeftOutlined, SearchOutlined } from "@ant-design/icons";
 import Modal from "react-modal";
-import {
-  sampleUserData,
-  sampleRegionData,
-  addModalStyles,
-  viewModalStyles,
-} from "./utils";
+import { addModalStyles, viewModalStyles, editModalStyles } from "./utils";
+import News from "../../service/News";
+import Region from "../../service/Region";
 
 const { Content } = Layout;
 const { TextArea } = Input;
@@ -18,72 +15,92 @@ function RegionalNews() {
   const [viewModalOpen, setViewModalOpen] = useState(false);
   const [searchInput, setSearchInput] = useState("");
   const [addNewsInput, setAddNewsInput] = useState({
-    region: "",
-    municipality: "",
-    title: "",
+    regionId: "",
+    municipalityId: "",
+    headline: "",
     description: "",
   });
 
-  // parses data when data is available
+  // console.log(addNewsInput);
+
+  const [municipalities, setMunicipalities] = useState([]);
+  const [selectedRegion, setSelectedRegion] = useState(null);
+  const [data, setData] = useState([]);
+  const [records, setRecords] = useState([]);
+  const [regions, setRegions] = useState([]);
+
+  const [editModalVisible, setEditModalVisible] = useState(false);
+  const [editNewsInput, setEditNewsInput] = useState({
+    regionId: "",
+    municipalityId: "",
+    headline: "",
+    description: "",
+  });
+
+  // console.log("EDIT NEWS INPUT:", editNewsInput);
+
+  // console.log(selectedRegion);
+
+  // GET NEWS LIST WHEN COMPONENT MOUNTS
   useEffect(() => {
-    // when component renders, call api to get users, then parse data into records array
-    // to display in table
-    // getAllUsers....
+    News.getAllNews().then((e) => {
+      const { data } = e.data;
+      // console.log(data);
 
-    // call this function when data is retrieved from backend api
-    parseTableData();
+      setData(data);
+    });
 
-    // get regions and municipalities from backend? now from hardcoded utils only
-    setRegions(sampleRegionData);
+    Region.getRegionList().then((e) => {
+      const { data } = e.data;
+      // console.log(data);
+      setRegions(data);
+    });
   }, []);
 
-  // hard coded data --- but this data needs to be retrieved from backend
-  const [data, setData] = useState(sampleUserData);
+  // SETS MUNICIPALITIES DEPENDING ON REGION SELECTED
+  useEffect(() => {
+    if (selectedRegion) {
+      Region.getMunicipalityByRegionId(selectedRegion).then((e) => {
+        const { data } = e.data;
+        console.log("MUNI:", data);
+        setMunicipalities(data);
+      });
+    }
+  }, [selectedRegion]);
 
-  // initial data table -- starts empty, gets data when parsed
-  const [records, setRecords] = useState([]);
+  useEffect(() => {
+    if (data.length > 0) {
+      parseTableData();
+    }
+  }, [data]);
 
-  // parses data from backend
+  // parses data saved in DATA state
   const parseTableData = () => {
     const record = data.map((e, i) => {
+      // console.log(e);
       return {
         key: i,
+        id: e._id,
         region: e.region,
+        regionId: e.regionId,
         municipality: e.municipality,
-        title: e.title,
+        municipalityId: e.municipalityId,
+        headline: e.headline,
         description: e.description,
       };
     });
     setRecords(record);
   };
 
-  const [regions, setRegions] = useState([]);
-
-  // HARD CODED WAY OF GETTING REGION THEN MUNICIPALITY
-  const [selectedRegion, setSelectedRegion] = useState(null);
-
-  const [municipalities, setMunicipalities] = useState([]);
-
-  const handleSelect = (region) => {
-    setAddNewsInput({ ...addNewsInput, region });
-    setSelectedRegion(region);
+  const handleSelect = (regionId) => {
+    setAddNewsInput({ ...addNewsInput, regionId });
+    setSelectedRegion(regionId);
   };
 
-  useEffect(() => {
-    if (selectedRegion) {
-      setMunicipalities(getMunicipalities(selectedRegion));
-    }
-  }, [selectedRegion]);
-
-  // this is the backend api to get municipality depending on regions
-  // service.getMunicipalities(region) to get municipalities of a region to
-  // populate municipality select...get an array of municipalities
-  const getMunicipalities = (e) => {
-    if (e === "NCR") {
-      return ["QC", "PASIG", "MANILA"];
-    } else if (e === "CAT") {
-      return ["BICOL", "NAGA", "CARAMOAN"];
-    }
+  // SETS REGION FOR GETTING MUNICIPALITIES FOR EDIT USER
+  const handleEditSelect = (regionId) => {
+    setEditNewsInput({ ...editNewsInput, regionId });
+    setSelectedRegion(regionId);
   };
 
   const openModal = () => {
@@ -94,29 +111,120 @@ function RegionalNews() {
     setIsOpen(false);
   };
 
+  // ADD NEWS WHEN MODAL IS SUBMITTED
   const okModal = () => {
-    //clear fields and state
-    setAddNewsInput({
-      region: "",
-      municipality: "",
-      title: "",
-      description: "",
-    });
     setIsOpen(false);
-    // send values to backend to ADD news
     console.log("FROM ADD NEWS MODAL:", addNewsInput);
+
+    News.addNews(
+      addNewsInput.headline,
+      addNewsInput.description,
+      addNewsInput.regionId,
+      addNewsInput.municipalityId
+    ).then((e) => {
+      const { data } = e.data;
+      console.log(data);
+
+      //clear fields and state
+      setAddNewsInput({
+        regionId: "",
+        municipality: "",
+        headline: "",
+        description: "",
+      });
+
+      window.location.reload(); // replace with success prompt
+    });
   };
 
-  const openViewModal = () => {
+  const [preview, setPreview] = useState({
+    headline: "",
+    description: "",
+  });
+
+  const openViewModal = (item) => {
     setViewModalOpen(true);
+
+    console.log(item);
+
+    setPreview({
+      headline: item.headline,
+      description: item.description,
+    });
   };
 
   const closeViewModal = () => {
     setViewModalOpen(false);
+    setPreview({
+      headline: "",
+      description: "",
+    });
   };
 
   const handleModalChange = (e) => {
     setAddNewsInput({ ...addNewsInput, [e.target.name]: e.target.value });
+  };
+
+  const handleEditModalChange = (e) => {
+    setEditNewsInput({ ...editNewsInput, [e.target.name]: e.target.value });
+  };
+
+  const handleDeleteNews = (id) => {
+    console.log(id);
+
+    News.deleteNews(id).then((e) => {
+      const { data } = e.data;
+      console.log(data);
+      window.location.reload(); // replace with success prompt
+    });
+  };
+
+  const openEditModal = () => {
+    setEditModalVisible(true);
+  };
+
+  const closeEditModal = () => {
+    setEditModalVisible(false);
+  };
+
+  // UPDATE NEWS WHEN MODAL SUBMITTED
+  const okEditModal = () => {
+    setEditModalVisible(false);
+    console.log("OK EDIT");
+    News.updateNews(
+      editNewsInput.id,
+      editNewsInput.headline,
+      editNewsInput.description,
+      editNewsInput.regionId,
+      editNewsInput.municipalityId
+    ).then((e) => {
+      const { data } = e.data;
+      console.log(data);
+
+      //clear fields and state
+      setAddNewsInput({
+        regionId: "",
+        municipality: "",
+        headline: "",
+        description: "",
+      });
+
+      window.location.reload(); // replace with success prompt
+    });
+  };
+
+  // SETS VALUES OF CLICKED NEWS TO EDIT
+  const handleNewsEdit = (newsItem) => {
+    setEditNewsInput({
+      ...editNewsInput,
+      // regionId: newsItem.region,
+      // municipalityId: user.municipalityId,
+      headline: newsItem.headline,
+      description: newsItem.description,
+      id: newsItem.id,
+    });
+    openEditModal();
+    console.log(newsItem);
   };
 
   const tableSource = [
@@ -135,9 +243,9 @@ function RegionalNews() {
       align: "center",
     },
     {
-      title: "Title",
-      dataIndex: "title",
-      key: "title",
+      title: "Headline",
+      dataIndex: "headline",
+      key: "headline",
       align: "center",
     },
     {
@@ -154,9 +262,16 @@ function RegionalNews() {
       width: 250,
       render: (e, newsItem) => (
         <>
-          <Button className="editBtn">EDIT</Button>
-          <Button className="deleteBtn">DELETE</Button>
-          <Button onClick={openViewModal} className="viewBtn">
+          <Button onClick={() => handleNewsEdit(newsItem)} className="editBtn">
+            EDIT
+          </Button>
+          <Button
+            onClick={() => handleDeleteNews(newsItem.id)}
+            className="deleteBtn"
+          >
+            DELETE
+          </Button>
+          <Button onClick={() => openViewModal(newsItem)} className="viewBtn">
             VIEW
           </Button>
         </>
@@ -206,7 +321,7 @@ function RegionalNews() {
         isOpen={modalIsOpen}
         onRequestClose={closeModal}
         style={addModalStyles}
-        contentLabel="Edit News Modal"
+        contentLabel="Add News Modal"
       >
         <div
           style={{
@@ -226,25 +341,27 @@ function RegionalNews() {
               <Form.Item>
                 <h5>Region:</h5>
                 <select
-                  value={addNewsInput.region}
+                  value={addNewsInput.regionId}
                   onChange={(e) => handleSelect(e.target.value)}
                 >
                   <option value="" selected disabled hidden>
                     Choose Region
                   </option>
                   {regions.map((e, i) => (
-                    <option value={e.region}>{e.region}</option>
+                    <option key={i} value={e._id}>
+                      {e.region}
+                    </option>
                   ))}
                 </select>
               </Form.Item>
               <Form.Item>
                 <h5>Municipality:</h5>
                 <select
-                  value={addNewsInput.municipality}
+                  value={addNewsInput.municipalityId}
                   onChange={(e) =>
                     setAddNewsInput({
                       ...addNewsInput,
-                      municipality: e.target.value,
+                      municipalityId: e.target.value,
                     })
                   }
                 >
@@ -252,17 +369,19 @@ function RegionalNews() {
                     Choose Municipality
                   </option>
                   {municipalities.map((e, i) => (
-                    <option value={e}>{e}</option>
+                    <option key={i} value={e._id}>
+                      {e.municipality}
+                    </option>
                   ))}
                 </select>
               </Form.Item>
             </div>
 
             <Form.Item>
-              <h5>Title:</h5>
+              <h5>Headline:</h5>
               <Input
-                name="title"
-                value={addNewsInput.title}
+                name="headline"
+                value={addNewsInput.headline}
                 onChange={(e) => handleModalChange(e)}
               />
             </Form.Item>
@@ -283,6 +402,93 @@ function RegionalNews() {
         </div>
       </Modal>
 
+      {/* EDIT NEWS MODAL  */}
+      <Modal
+        ariaHideApp={false}
+        isOpen={editModalVisible}
+        onRequestClose={closeEditModal}
+        style={editModalStyles}
+        contentLabel="Edit News Modal"
+      >
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+          }}
+        >
+          <div className="addNews-modal-header">
+            <h2>Edit News</h2>{" "}
+            <h2 className="addNews-modal-close-icon" onClick={closeEditModal}>
+              X
+            </h2>
+          </div>
+
+          <Form className="addNews-modal-form">
+            <div>
+              <Form.Item>
+                <h5>Region:</h5>
+                <select
+                  value={editNewsInput.regionId}
+                  onChange={(e) => handleEditSelect(e.target.value)}
+                >
+                  <option value="" selected disabled hidden>
+                    Choose Region
+                  </option>
+                  {regions.map((e, i) => (
+                    <option key={i} value={e._id}>
+                      {e.region}
+                    </option>
+                  ))}
+                </select>
+              </Form.Item>
+              <Form.Item>
+                <h5>Municipality:</h5>
+                <select
+                  value={editNewsInput.municipalityId}
+                  onChange={(e) =>
+                    setEditNewsInput({
+                      ...editNewsInput,
+                      municipalityId: e.target.value,
+                    })
+                  }
+                >
+                  <option value="" selected disabled hidden>
+                    Choose Municipality
+                  </option>
+                  {municipalities.map((e, i) => (
+                    <option key={i} value={e._id}>
+                      {e.municipality}
+                    </option>
+                  ))}
+                </select>
+              </Form.Item>
+            </div>
+
+            <Form.Item>
+              <h5>Headline:</h5>
+              <Input
+                name="headline"
+                value={editNewsInput.headline}
+                onChange={(e) => handleEditModalChange(e)}
+              />
+            </Form.Item>
+
+            <Form.Item>
+              <h5>Description:</h5>
+              <TextArea
+                rows={4}
+                name="description"
+                value={editNewsInput.description}
+                onChange={(e) => handleEditModalChange(e)}
+              />
+            </Form.Item>
+          </Form>
+          <Button onClick={okEditModal} className="addNews-modal-button">
+            Submit
+          </Button>
+        </div>
+      </Modal>
+
       {/* VIEW NEWS MODAL  */}
       <Modal
         ariaHideApp={false}
@@ -297,20 +503,15 @@ function RegionalNews() {
             flexDirection: "column",
           }}
         >
-          <div className="region-modal-header">
+          <div className="viewNews-modal-header">
             <h2>PREVIEW</h2>{" "}
-            <h2 className="region-modal-close-icon" onClick={closeViewModal}>
+            <h2 className="viewNews-modal-close-icon" onClick={closeViewModal}>
               X
             </h2>
           </div>
-          <div>
-            <div>COVID PAWALA NA NGA BA</div>
-            <div>
-              Dolore nostrud incididunt anim labore sunt sint. Enim consequat
-              cillum laboris ut dolore laborum in. Est exercitation ullamco sit
-              ullamco ullamco sit duis. Commodo cillum dolore id pariatur qui
-              consequat ut exercitation cupidatat ipsum ullamco.
-            </div>
+          <div className="viewNews-modal-body">
+            <div className="viewNews-modal-headline">{preview.headline}</div>
+            <div className="viewNews-modal-desc">{preview.description}</div>
           </div>
         </div>
       </Modal>
