@@ -69,10 +69,10 @@ function RegionalNews() {
   }, [selectedRegion]);
 
   useEffect(() => {
-    if (data.length > 0) {
+    if (data.length > 0 || searchInput === "") {
       parseTableData();
     }
-  }, [data]);
+  }, [data, searchInput]);
 
   // parses data saved in DATA state
   const parseTableData = () => {
@@ -90,6 +90,24 @@ function RegionalNews() {
       };
     });
     setRecords(record);
+  };
+
+  // FILTER TABLE DATA WHEN SEARCH IS CLICKED
+  const doSearch = (text) => {
+    const filtered = records.filter((record) => {
+      return (
+        record.headline.toLowerCase().includes(text) ||
+        record.headline.toUpperCase().includes(text)
+      );
+    });
+
+    setRecords(filtered);
+  };
+
+  const handleKeypress = (e) => {
+    if (e.key === "Enter") {
+      doSearch(searchInput);
+    }
   };
 
   const handleSelect = (regionId) => {
@@ -295,12 +313,16 @@ function RegionalNews() {
             Add Regional News +
           </Button>
           <span className="regionalNews__utils--search">
-            <SearchOutlined style={{ fontSize: "24px", color: "gray" }} />
+            <SearchOutlined
+              onClick={() => doSearch(searchInput)}
+              style={{ fontSize: "24px", color: "gray" }}
+            />
             <Input
               className="search--input"
               placeholder="Search News"
               value={searchInput}
               onChange={(e) => setSearchInput(e.target.value)}
+              onKeyPress={(e) => handleKeypress(e)}
             />
           </span>
         </Row>

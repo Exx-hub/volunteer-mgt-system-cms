@@ -134,7 +134,6 @@ function Users() {
   };
 
   const handleKeypress = (e) => {
-    console.log(e.key);
     if (e.key === "Enter") {
       doSearch(searchInput);
     }
