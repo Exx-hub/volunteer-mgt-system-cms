@@ -26,6 +26,16 @@ const Region = {
   // delete region
 
   // add municipality
+  addMunicipality: (municipality, regionId) => {
+    return axios({
+      method: "POST",
+      url: `${BASE_URL}/municipality/addMunicipality`,
+      data: {
+        municipality,
+        regionId,
+      },
+    });
+  },
   // update municipality
   // delete municipality
   // get all municipalities

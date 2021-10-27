@@ -26,7 +26,7 @@ function StatusReport() {
   const [selectedRegion, setSelectedRegion] = useState(null);
 
   const [selectedMunicipalities, setSelectedMunicipalities] = useState([]);
-  console.log(selectedMunicipalities);
+  // console.log(selectedMunicipalities);
 
   // const handleSelect = (region) => {
   //   setSelectedRegion(region);
@@ -67,9 +67,18 @@ function StatusReport() {
     setIsOpen(false);
   };
 
+  // add municipality to selected region
   const okModal = () => {
     setIsOpen(false);
     console.log(addMuniInput);
+
+    Region.addMunicipality(
+      addMuniInput.municipality,
+      addMuniInput.regionId
+    ).then((e) => {
+      const { data } = e.data;
+      console.log(data);
+    });
 
     setAddMuniInput({
       regionId: "",
@@ -131,8 +140,8 @@ function StatusReport() {
             >
               Details
             </Button>
-            <Button className="editButton">Edit</Button>
-            <Button className="deleteButton">Delete</Button>
+            {/* <Button className="editButton">Edit</Button> */}
+            {/* <Button className="deleteButton">Delete</Button> */}
           </>
         );
       },
