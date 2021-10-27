@@ -1,59 +1,59 @@
 import React, { useEffect, useState } from "react";
 import "./statusReport.css";
-import { sampleUserData, modalStyles } from "./utils";
+import { viewMuniModalStyles, modalStyles } from "./utils";
 
-import { Layout, Row, Col, Button, Table, Form } from "antd";
+import { Layout, Row, Col, Button, Table, Form, Input } from "antd";
 import { LeftOutlined } from "@ant-design/icons";
 import Modal from "react-modal";
+import Region from "../../service/Region";
 
 const { Content } = Layout;
 
 function StatusReport() {
   const [modalIsOpen, setIsOpen] = useState(false);
-  const [data, setData] = useState(sampleUserData);
+  const [viewMuniModalVisible, setViewMuniModalVisible] = useState(false);
+  const [addMuniInput, setAddMuniInput] = useState({
+    regionId: "",
+    municipality: "",
+  });
+
+  // console.log(addMuniInput);
+  const [data, setData] = useState([]);
   const [records, setRecords] = useState([]);
 
-  console.log(records);
+  // console.log(records);
 
-  // HARD CODED WAY OF GETTING REGION THEN MUNICIPALITY
   const [selectedRegion, setSelectedRegion] = useState(null);
-  console.log(selectedRegion);
 
-  const [municipalities, setMunicipalities] = useState([]);
-  console.log(municipalities);
+  const [selectedMunicipalities, setSelectedMunicipalities] = useState([]);
+  console.log(selectedMunicipalities);
 
-  const handleSelect = (region) => {
-    setSelectedRegion(region);
-  };
-
-  useEffect(() => {
-    if (selectedRegion) {
-      setMunicipalities(getMunicipalities(selectedRegion));
-    }
-  }, [selectedRegion]);
-
-  // this is the backend api to get municipality depending on regions
-  // service.getMunicipalities(region) to get municipalities of a region to
-  // populate municipality select...get an array of municipalities
-  const getMunicipalities = (e) => {
-    if (e === "NCR") {
-      return ["QC", "PASIG", "MANILA"];
-    } else if (e === "CAT") {
-      return ["BICOL", "NAGA", "CARAMOAN"];
-    }
-  };
+  // const handleSelect = (region) => {
+  //   setSelectedRegion(region);
+  // };
 
   useEffect(() => {
-    parseTableData();
+    Region.getRegionList().then((e) => {
+      const { data } = e.data;
+      // console.log(data);
+      setData(data);
+    });
   }, []);
+
+  // PARSES RECORDS
+  useEffect(() => {
+    if (data.length > 0) {
+      parseTableData();
+    }
+  }, [data]);
 
   const parseTableData = () => {
     const record = data.map((e, i) => {
-      //   console.log(e);
+      // console.log(e);
       return {
         key: i,
+        id: e._id,
         region: e.region,
-        municipalities: e.municipalities,
       };
     });
     setRecords(record);
@@ -69,7 +69,35 @@ function StatusReport() {
 
   const okModal = () => {
     setIsOpen(false);
-    alert("call api to add region");
+    console.log(addMuniInput);
+
+    setAddMuniInput({
+      regionId: "",
+      municipality: "",
+    });
+  };
+
+  const openViewModal = () => {
+    setViewMuniModalVisible(true);
+  };
+
+  const closeViewModal = () => {
+    setViewMuniModalVisible(false);
+  };
+
+  const getMunicipalitiesByRegionId = (id, name) => {
+    // console.log(name);
+
+    setSelectedRegion(name);
+
+    Region.getMunicipalityByRegionId(id).then((e) => {
+      const { data } = e.data;
+      // console.log(data);
+
+      setSelectedMunicipalities(data);
+    });
+
+    openViewModal(true);
   };
 
   const tableSource = [
@@ -95,7 +123,14 @@ function StatusReport() {
         // or use selected region also
         return (
           <>
-            <Button className="detailsButton">Details</Button>
+            <Button
+              onClick={() =>
+                getMunicipalitiesByRegionId(record.id, record.region)
+              }
+              className="detailsButton"
+            >
+              Details
+            </Button>
             <Button className="editButton">Edit</Button>
             <Button className="deleteButton">Delete</Button>
           </>
@@ -118,7 +153,7 @@ function StatusReport() {
 
         <Row>
           <Button onClick={openModal} className="statusPage__button">
-            Add New Region & Municipality +
+            Add New Municipality +
           </Button>
         </Row>
         <div>
@@ -132,12 +167,13 @@ function StatusReport() {
         </div>
       </Content>
 
-      {/* ADD REGION MODAL  */}
+      {/* ADD Municipality MODAL  */}
       <Modal
+        ariaHideApp={false}
         isOpen={modalIsOpen}
         onRequestClose={closeModal}
         style={modalStyles}
-        contentLabel="Add Region Modal"
+        contentLabel="Add Muni Modal"
       >
         <div
           style={{
@@ -146,40 +182,81 @@ function StatusReport() {
           }}
         >
           <div className="region-modal-header">
-            <h2>Add New Region & Municipality</h2>{" "}
+            <h2>Add Municipality</h2>{" "}
             <h2 className="region-modal-close-icon" onClick={closeModal}>
               X
             </h2>
           </div>
 
           <Form className="region-modal-form">
-            <Form.Item>
+            <Form.Item className="region-select-formItem">
               <h5>Region:</h5>
-              <select onChange={(e) => handleSelect(e.target.value)}>
+              <select
+                value={addMuniInput.region}
+                onChange={(e) =>
+                  setAddMuniInput({
+                    ...addMuniInput,
+                    regionId: e.target.value,
+                  })
+                }
+              >
                 <option value="" selected disabled hidden>
                   Choose Region
                 </option>
                 {records.map((e, i) => (
-                  <option value={e.region}>{e.region}</option>
+                  <option key={i} value={e.id}>
+                    {e.region}
+                  </option>
                 ))}
               </select>
             </Form.Item>
             <Form.Item>
               <h5>Municipality:</h5>
-
-              <select>
-                <option value="" selected disabled hidden>
-                  Choose Municipality
-                </option>
-                {municipalities.map((e, i) => (
-                  <option value={e}>{e}</option>
-                ))}
-              </select>
+              <Input
+                className="region-modal-input"
+                value={addMuniInput.municipality}
+                onChange={(e) =>
+                  setAddMuniInput({
+                    ...addMuniInput,
+                    municipality: e.target.value,
+                  })
+                }
+              />
             </Form.Item>
           </Form>
           <Button onClick={okModal} className="region-modal-button">
             Submit
           </Button>
+        </div>
+      </Modal>
+
+      {/* MUNICIPALITY LIST MODAL  */}
+      <Modal
+        ariaHideApp={false}
+        isOpen={viewMuniModalVisible}
+        onRequestClose={closeViewModal}
+        style={viewMuniModalStyles}
+        contentLabel="Municipality List Modal"
+      >
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+          }}
+        >
+          <div className="muniList-modal-header">
+            <h2>{selectedRegion}</h2>{" "}
+            <h2 onClick={closeViewModal} className="muniList-modal-close-icon">
+              X
+            </h2>
+          </div>
+          <div>
+            {selectedMunicipalities.map((e, i) => (
+              <p className="muni-p" key={i}>
+                {e.municipality}
+              </p>
+            ))}
+          </div>
         </div>
       </Modal>
     </Layout>

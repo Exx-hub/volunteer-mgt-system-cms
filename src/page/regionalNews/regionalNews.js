@@ -202,6 +202,7 @@ function RegionalNews() {
 
       {/* ADD NEWS MODAL  */}
       <Modal
+        ariaHideApp={false}
         isOpen={modalIsOpen}
         onRequestClose={closeModal}
         style={addModalStyles}
@@ -284,6 +285,7 @@ function RegionalNews() {
 
       {/* VIEW NEWS MODAL  */}
       <Modal
+        ariaHideApp={false}
         isOpen={viewModalOpen}
         onRequestClose={closeViewModal}
         style={viewModalStyles}

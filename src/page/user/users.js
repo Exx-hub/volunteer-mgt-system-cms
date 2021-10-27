@@ -46,7 +46,7 @@ function Users() {
     password: "",
   });
 
-  console.log(editUserInput);
+  // console.log(editUserInput);
 
   const [passwordInput, setPasswordInput] = useState("");
   const [confirmInput, setConfirmInput] = useState("");
@@ -107,6 +107,13 @@ function Users() {
     setRecords(filtered);
   };
 
+  const handleKeypress = (e) => {
+    console.log(e.key);
+    if (e.key === "Enter") {
+      doSearch(searchInput);
+    }
+  };
+
   // SETS REGION FOR GETTING MUNICIPALITIES FOR EDIT USER
   const handleSelect = (regionId) => {
     setModalInput({ ...modalInput, regionId });
@@ -125,6 +132,7 @@ function Users() {
       console.log(e);
       return {
         key: i,
+        id: e._id,
         // fullName: e.fullName,
         firstName: e.firstName,
         lastName: e.lastName,
@@ -133,13 +141,12 @@ function Users() {
         // email: e.email,
         mobileNumber: e.mobileNo,
         address: e.address,
-        municipality: "Quezon City",
-        region: "NCR",
-        birthday: "Oct 26,2001",
+        municipality: e.municipality,
+        region: e.region,
         municipalityId: e.municipalityId,
         regionId: e.regionId,
+        birthday: "Oct 26,2001",
         // birthday: moment.tz(e.birthDate).format("MMM DD, YYYY"),
-        id: e._id,
       };
     });
     setRecords(record);
@@ -385,13 +392,6 @@ function Users() {
       },
     },
   ];
-
-  const handleKeypress = (e) => {
-    console.log(e.key);
-    if (e.key === "Enter") {
-      doSearch(searchInput);
-    }
-  };
 
   return (
     <>
