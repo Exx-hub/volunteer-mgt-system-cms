@@ -123,9 +123,7 @@ function Users() {
   const doSearch = (text) => {
     const filtered = records.filter((record) => {
       return (
-        record.firstName.toLowerCase().includes(text) ||
         record.lastName.toLowerCase().includes(text) ||
-        record.firstName.toUpperCase().includes(text) ||
         record.lastName.toUpperCase().includes(text)
       );
     });
@@ -433,7 +431,7 @@ function Users() {
               />
               <Input
                 className="search--input"
-                placeholder="Search User Here"
+                placeholder="Search By Last Name"
                 value={searchInput}
                 onChange={(e) => setSearchInput(e.target.value)}
                 onKeyPress={(e) => handleKeypress(e)}

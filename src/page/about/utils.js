@@ -8,7 +8,7 @@ export const addAboutTextStyles = {
     transform: "translate(-50%, -50%)",
     padding: 0,
     border: "none",
-    "box-shadow": "rgba(0, 0, 0, 0.24) 0px 3px 8px",
+    boxShadow: "rgba(0, 0, 0, 0.24) 0px 3px 8px",
     width: "500px",
     borderRadius: "12px",
     // minWidth: "900px",

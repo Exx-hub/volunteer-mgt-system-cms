@@ -20,15 +20,11 @@ function RegionalNews() {
     headline: "",
     description: "",
   });
-
-  // console.log(addNewsInput);
-
   const [municipalities, setMunicipalities] = useState([]);
   const [selectedRegion, setSelectedRegion] = useState(null);
   const [data, setData] = useState([]);
   const [records, setRecords] = useState([]);
   const [regions, setRegions] = useState([]);
-
   const [editModalVisible, setEditModalVisible] = useState(false);
   const [editNewsInput, setEditNewsInput] = useState({
     regionId: "",
@@ -36,15 +32,10 @@ function RegionalNews() {
     headline: "",
     description: "",
   });
-
   const [preview, setPreview] = useState({
     headline: "",
     description: "",
   });
-
-  // console.log("EDIT NEWS INPUT:", editNewsInput);
-
-  // console.log(selectedRegion);
 
   // GET NEWS LIST WHEN COMPONENT MOUNTS
   useEffect(() => {
@@ -170,8 +161,6 @@ function RegionalNews() {
   const openViewModal = (item) => {
     setViewModalOpen(true);
 
-    // console.log(item);
-
     setPreview({
       headline: item.headline,
       description: item.description,
@@ -249,7 +238,7 @@ function RegionalNews() {
       id: newsItem.id,
     });
     openEditModal();
-    console.log(newsItem);
+    // console.log(newsItem);
   };
 
   const tableSource = [
@@ -326,7 +315,7 @@ function RegionalNews() {
             />
             <Input
               className="search--input"
-              placeholder="Search News"
+              placeholder="Search By Headline"
               value={searchInput}
               onChange={(e) => setSearchInput(e.target.value)}
               onKeyPress={(e) => handleKeypress(e)}

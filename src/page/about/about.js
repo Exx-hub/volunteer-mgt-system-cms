@@ -3,20 +3,48 @@ import "./about.css";
 import { Layout, Row, Col, Button, Form, Input } from "antd";
 import { EditOutlined } from "@ant-design/icons";
 import Modal from "react-modal";
-import { addAboutTextStyles, aboutDescription } from "./utils";
+import { addAboutTextStyles } from "./utils";
+import AboutService from "../../service/About";
 
 const { Content } = Layout;
 const { TextArea } = Input;
 
 function About() {
-  const [aboutText, setAboutText] = useState("");
   const [modalIsOpen, setIsOpen] = useState(false);
   const [textareaInput, setTextAreaInput] = useState("");
+  const [data, setData] = useState([]);
+  const [aboutDetails, setAboutDetails] = useState([]);
+
+  const aboutDeets = aboutDetails[0];
+
+  console.log(aboutDeets);
 
   useEffect(() => {
-    // get description from backend here api call
-    setAboutText(aboutDescription);
+    AboutService.getAboutInfo().then((e) => {
+      const { data } = e.data;
+      console.log(data);
+
+      setData(data);
+    });
   }, []);
+
+  useEffect(() => {
+    if (data.length > 0) {
+      parseData();
+    }
+  }, [data]);
+
+  const parseData = () => {
+    const record = data.map((e, i) => {
+      return {
+        key: i,
+        id: e._id,
+        text: e.details,
+      };
+    });
+
+    setAboutDetails(record);
+  };
 
   const openModal = () => {
     setIsOpen(true);
@@ -27,10 +55,24 @@ function About() {
   };
 
   const okModal = () => {
-    setTextAreaInput("");
     setIsOpen(false);
-    // send values to backend to ADD news
     console.log("FROM MODAL:", textareaInput);
+
+    AboutService.updateAboutInfo(aboutDeets.id, textareaInput).then((e) => {
+      const { data } = e;
+      console.log(data);
+
+      setTextAreaInput("");
+      window.location.reload(); // replace with success prompt
+    });
+  };
+
+  const truncateString = (text) => {
+    if (text.length > 450) {
+      return text.slice(0, 450) + "....";
+    }
+
+    return text;
   };
   return (
     <Layout className="about__container">
@@ -47,14 +89,17 @@ function About() {
               <EditOutlined
                 style={{ fontSize: "20px", marginRight: "8px" }}
               />{" "}
-              Add New Text
+              Update Text
             </Button>
-            <p className="about__text">{aboutText}</p>
+            {aboutDetails.length > 0 && (
+              <p className="about__text">{truncateString(aboutDeets.text)}</p>
+            )}
           </div>
         </div>
       </Content>
 
       <Modal
+        ariaHideApp={false}
         isOpen={modalIsOpen}
         onRequestClose={closeModal}
         style={addAboutTextStyles}
@@ -78,6 +123,7 @@ function About() {
             <Form.Item className="textarea-div">
               <h5>Text:</h5>
               <TextArea
+                // maxLength={150}
                 rows={10}
                 name="text"
                 allowClear

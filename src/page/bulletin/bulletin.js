@@ -294,7 +294,7 @@ function Bulletin() {
             />
             <Input
               className="bulletin__search--input"
-              placeholder="Search News"
+              placeholder="Search By Title"
               value={searchInput}
               onChange={(e) => setSearchInput(e.target.value)}
               onKeyPress={(e) => handleKeypress(e)}
