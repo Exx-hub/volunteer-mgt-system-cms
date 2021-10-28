@@ -1,3 +1,7 @@
+* {
+  font-family: "Montserrat", sans-serif;
+}
+
 .loginPage {
   width: 100%;
   height: 100vh;
@@ -12,13 +16,13 @@
 
 .loginPage__formContainer {
   position: absolute;
-  top: 70%;
+  top: 60%;
   left: 50%;
   transform: translate(-50%, -50%);
 
-  border: 2px solid black;
+  /* border: 2px solid black; */
   /* height: 250px; */
-  width: 300px;
+  width: 280px;
 }
 
 .loginPage__form {
@@ -26,6 +30,93 @@
   flex-direction: column;
 }
 
+.loginPage__inputSpan {
+  margin-bottom: 1rem;
+
+  background-color: white;
+  border-radius: 33px;
+  padding: 0.8rem;
+
+  display: flex;
+  align-items: center;
+}
+
+.loginPage__input {
+  border: none;
+  outline: none;
+  margin-left: 0.25rem;
+  background-color: white;
+  font-size: 14px;
+}
+
+.loginPage__form input[type] {
+  color: #2e418c;
+}
+
+.loginPage__form input[type]::placeholder {
+  text-align: center;
+  color: gray;
+  font-size: 16px;
+  font-weight: 300;
+}
+
+.loginPage__button {
+  margin-bottom: 0.7rem;
+  border-radius: 33px;
+  border: none;
+  padding: 0.8rem;
+  text-align: center;
+  color: white;
+  font-size: 15px;
+  font-weight: 300;
+  background-color: #2e418c;
+  cursor: pointer;
+  position: relative;
+}
+
+.loginPage__button:hover {
+  color: #2e418c;
+  background-color: white;
+}
+
+.disabled {
+  color: gray;
+  cursor: not-allowed;
+}
+
+.disabled:hover {
+  color: gray;
+  cursor: not-allowed;
+}
+
+.loginPage__button--spinner {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.loginPage__radio {
+  align-self: flex-end;
+  font-size: 14px;
+  font-weight: 400;
+  color: white;
+  margin-right: 5px;
+}
+
 .ant-image-mask-info {
   display: none;
+}
+
+/* Remove  number input arrows  */
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type="number"] {
+  -moz-appearance: textfield;
 }

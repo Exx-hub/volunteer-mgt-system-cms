@@ -1,0 +1,40 @@
+.regional__container {
+  height: 100vh;
+  background: url("../../assets/images/mainBg.jpg");
+  background-position: right top;
+}
+
+.regional__main {
+  width: 95%;
+  margin: 0 auto;
+  padding-top: 2rem;
+}
+
+.regional__title {
+  font-size: 3.5rem;
+  font-family: "Bebas Neue", sans-serif;
+  color: white;
+}
+
+.regional__divider {
+  background-color: white;
+  height: 3px;
+  margin-bottom: 4rem;
+  width: 92%;
+}
+
+.regional__imageButtons--container {
+  display: flex;
+  width: 85%;
+
+  border-radius: 33px;
+  overflow: hidden;
+
+  margin: 0 auto;
+  position: relative;
+}
+
+.regional__imageButtons--container img {
+  width: 100%;
+  cursor: pointer;
+}
