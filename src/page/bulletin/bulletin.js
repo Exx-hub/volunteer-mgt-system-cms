@@ -10,6 +10,7 @@ import {
 } from "./utils";
 import BulletinService from "../../service/Bulletin";
 import Region from "../../service/Region";
+import Alert from "react-s-alert";
 
 const { Content } = Layout;
 const { TextArea } = Input;
@@ -131,6 +132,7 @@ function Bulletin() {
     });
   };
 
+  // ADD BULLETIN
   const okModal = () => {
     setIsOpen(false);
 
@@ -152,14 +154,36 @@ function Bulletin() {
         description: "",
       });
 
-      window.location.reload(); // replace with success prompt
+      Alert.success("Successfully added bulletin", {
+        position: "top-right",
+        effect: "slide",
+        timeout: 3000,
+      });
+
+      BulletinService.getAllBulletin().then((e) => {
+        const { data } = e.data;
+        // console.log(data);
+        setData(data);
+      });
     });
   };
 
+  // DELETE BULLETIN
   const deleteBulletinById = (id) => {
     BulletinService.deleteBulletin(id).then((e) => {
       const { data } = e.data;
-      window.location.reload(); // replace with success prompt
+
+      Alert.success("Successfully deleted bulletin", {
+        position: "top-right",
+        effect: "slide",
+        timeout: 3000,
+      });
+
+      BulletinService.getAllBulletin().then((e) => {
+        const { data } = e.data;
+        // console.log(data);
+        setData(data);
+      });
     });
   };
 
@@ -199,7 +223,7 @@ function Bulletin() {
     console.log(item);
   };
 
-  // UPDATE USER WHEN MODAL SUBMITTED
+  // UPDATE BULLETIN
   const okEditModal = () => {
     setEditModalVisible(false);
     console.log(editModalInput);
@@ -222,7 +246,17 @@ function Bulletin() {
         description: "",
       });
 
-      window.location.reload(); // replace with success prompt
+      Alert.success("Successfully updated bulletin", {
+        position: "top-right",
+        effect: "slide",
+        timeout: 3000,
+      });
+
+      BulletinService.getAllBulletin().then((e) => {
+        const { data } = e.data;
+        // console.log(data);
+        setData(data);
+      });
     });
   };
 

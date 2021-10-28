@@ -5,6 +5,7 @@ import { EditOutlined } from "@ant-design/icons";
 import Modal from "react-modal";
 import { addAboutTextStyles } from "./utils";
 import AboutService from "../../service/About";
+import Alert from "react-s-alert";
 
 const { Content } = Layout;
 const { TextArea } = Input;
@@ -63,7 +64,19 @@ function About() {
       console.log(data);
 
       setTextAreaInput("");
-      window.location.reload(); // replace with success prompt
+
+      Alert.success("Successfully updated About", {
+        position: "top-right",
+        effect: "slide",
+        timeout: 3000,
+      });
+
+      AboutService.getAboutInfo().then((e) => {
+        const { data } = e.data;
+        console.log(data);
+
+        setData(data);
+      });
     });
   };
 

@@ -6,6 +6,7 @@ import Modal from "react-modal";
 import { addModalStyles, viewModalStyles, editModalStyles } from "./utils";
 import News from "../../service/News";
 import Region from "../../service/Region";
+import Alert from "react-s-alert";
 
 const { Content } = Layout;
 const { TextArea } = Input;
@@ -154,7 +155,18 @@ function RegionalNews() {
         description: "",
       });
 
-      window.location.reload(); // replace with success prompt
+      Alert.success("Successfully added news", {
+        position: "top-right",
+        effect: "slide",
+        timeout: 3000,
+      });
+
+      News.getAllNews().then((e) => {
+        const { data } = e.data;
+        // console.log(data);
+
+        setData(data);
+      });
     });
   };
 
@@ -189,7 +201,19 @@ function RegionalNews() {
     News.deleteNews(id).then((e) => {
       const { data } = e.data;
       console.log(data);
-      window.location.reload(); // replace with success prompt
+
+      Alert.success("Successfully deleted news", {
+        position: "top-right",
+        effect: "slide",
+        timeout: 3000,
+      });
+
+      News.getAllNews().then((e) => {
+        const { data } = e.data;
+        // console.log(data);
+
+        setData(data);
+      });
     });
   };
 
@@ -223,7 +247,18 @@ function RegionalNews() {
         description: "",
       });
 
-      window.location.reload(); // replace with success prompt
+      Alert.success("Successfully updated news", {
+        position: "top-right",
+        effect: "slide",
+        timeout: 3000,
+      });
+
+      News.getAllNews().then((e) => {
+        const { data } = e.data;
+        // console.log(data);
+
+        setData(data);
+      });
     });
   };
 

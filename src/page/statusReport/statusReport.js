@@ -6,6 +6,7 @@ import { Layout, Row, Col, Button, Table, Form, Input } from "antd";
 import { LeftOutlined } from "@ant-design/icons";
 import Modal from "react-modal";
 import Region from "../../service/Region";
+import Alert from "react-s-alert";
 
 const { Content } = Layout;
 
@@ -88,6 +89,12 @@ function StatusReport() {
     setAddMuniInput({
       regionId: "",
       municipality: "",
+    });
+
+    Alert.success("Successfully added municipality", {
+      position: "top-right",
+      effect: "slide",
+      timeout: 3000,
     });
   };
 
