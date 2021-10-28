@@ -4,6 +4,7 @@ import "./users.css";
 import { SearchOutlined } from "@ant-design/icons";
 import Modal from "react-modal";
 import moment from "moment-timezone";
+import Alert from "react-s-alert";
 
 import {
   pModalStyles,
@@ -218,7 +219,20 @@ function Users() {
         password: "",
       });
 
-      window.location.reload(); // replace with success prompt
+      Alert.success("Successfully added user", {
+        position: "top-right",
+        effect: "slide",
+        timeout: 3000,
+      });
+
+      // window.location.reload(); // replace with success prompt
+
+      AppUser.getAllAppUsers().then((e) => {
+        const { data } = e.data;
+        // console.log(data);
+
+        setData(data);
+      });
     });
   };
 
@@ -227,7 +241,19 @@ function Users() {
     AppUser.deleteAppUser(id).then((e) => {
       const { data } = e.data;
       console.log(data);
-      window.location.reload(); // replace with success prompt
+
+      Alert.success("Successfully deleted user", {
+        position: "top-right",
+        effect: "slide",
+        timeout: 3000,
+      });
+
+      AppUser.getAllAppUsers().then((e) => {
+        const { data } = e.data;
+        // console.log(data);
+
+        setData(data);
+      });
     });
   };
 
@@ -270,7 +296,19 @@ function Users() {
         municipalityId: "",
         password: "",
       });
-      window.location.reload(); // replace with success prompt
+
+      Alert.success("Successfully updated user", {
+        position: "top-right",
+        effect: "slide",
+        timeout: 3000,
+      });
+
+      AppUser.getAllAppUsers().then((e) => {
+        const { data } = e.data;
+        // console.log(data);
+
+        setData(data);
+      });
     });
   };
 

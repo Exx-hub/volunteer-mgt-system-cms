@@ -6,6 +6,7 @@ import { UserOutlined, LockOutlined, LoadingOutlined } from "@ant-design/icons";
 import { useHistory } from "react-router";
 import Admin from "../../service/Admin";
 import { UserProfile } from "../../utility";
+import Alert from "react-s-alert";
 
 function Login() {
   const [isLoading, setIsLoading] = useState(false);
@@ -13,12 +14,7 @@ function Login() {
   const [password, setPassword] = useState("");
   const [checked, setChecked] = useState(false);
 
-  const inputRef = useRef(null);
   const history = useHistory();
-
-  useEffect(() => {
-    inputRef.current.focus();
-  }, []);
 
   const onFinish = () => {
     setIsLoading(true);
@@ -59,7 +55,15 @@ function Login() {
           history.push("/home");
         }
       })
-      .catch((err) => console.log(err.message));
+      .catch((err) => {
+        setIsLoading(false);
+        console.log(err.message);
+        Alert.warning("Incorrect Username/Password", {
+          position: "top-right",
+          effect: "slide",
+          timeout: 3000,
+        });
+      });
   };
 
   return (
@@ -72,7 +76,6 @@ function Login() {
             <Input
               placeholder="Username"
               className="loginPage__input"
-              ref={inputRef}
               value={username}
               onChange={(e) => setUsername(e.target.value)}
             />
@@ -92,7 +95,9 @@ function Login() {
             htmlType="submit"
             disabled={isLoading}
             className={
-              isLoading ? "loginPage__button disabled" : "loginPage__button"
+              isLoading || username === "" || password === ""
+                ? "loginPage__button disabled"
+                : "loginPage__button"
             }
           >
             {isLoading && (
