@@ -274,3 +274,7 @@ h5 {
 .ReactModal__Overlay--before-close {
   opacity: 0;
 }
+
+.ant-empty {
+  text-align: center;
+}
