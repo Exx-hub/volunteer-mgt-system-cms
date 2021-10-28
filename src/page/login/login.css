@@ -1,0 +1,31 @@
+.loginPage {
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+  position: relative;
+}
+
+.loginPage__bgImage {
+  width: 100%;
+  height: 100vh;
+}
+
+.loginPage__formContainer {
+  position: absolute;
+  top: 70%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  border: 2px solid black;
+  /* height: 250px; */
+  width: 300px;
+}
+
+.loginPage__form {
+  display: flex;
+  flex-direction: column;
+}
+
+.ant-image-mask-info {
+  display: none;
+}
