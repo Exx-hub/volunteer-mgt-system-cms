@@ -42,14 +42,11 @@ function RegionalNews() {
   useEffect(() => {
     News.getAllNews().then((e) => {
       const { data } = e.data;
-      // console.log(data);
-
       setData(data);
     });
 
     Region.getRegionList().then((e) => {
       const { data } = e.data;
-      // console.log(data);
       setRegions(data);
     });
   }, []);
@@ -147,7 +144,6 @@ function RegionalNews() {
       const { data } = e.data;
       console.log(data);
 
-      //clear fields and state
       setAddNewsInput({
         regionId: "",
         municipality: "",
@@ -163,7 +159,6 @@ function RegionalNews() {
 
       News.getAllNews().then((e) => {
         const { data } = e.data;
-        // console.log(data);
 
         setData(data);
       });
@@ -210,7 +205,6 @@ function RegionalNews() {
 
       News.getAllNews().then((e) => {
         const { data } = e.data;
-        // console.log(data);
 
         setData(data);
       });
@@ -255,7 +249,6 @@ function RegionalNews() {
 
       News.getAllNews().then((e) => {
         const { data } = e.data;
-        // console.log(data);
 
         setData(data);
       });
@@ -273,7 +266,6 @@ function RegionalNews() {
       id: newsItem.id,
     });
     openEditModal();
-    // console.log(newsItem);
   };
 
   const tableSource = [

@@ -40,21 +40,15 @@ function Bulletin() {
     description: "",
   });
 
-  console.log(editModalInput);
-
-  console.log(addModalInput);
-
   // parses data when data is available
   useEffect(() => {
     BulletinService.getAllBulletin().then((e) => {
       const { data } = e.data;
-      // console.log(data);
       setData(data);
     });
 
     Region.getRegionList().then((e) => {
       const { data } = e.data;
-      // console.log(data);
       setRegions(data);
     });
   }, []);
@@ -110,7 +104,6 @@ function Bulletin() {
 
   const handleSelect = (regionId) => {
     setAddModalInput({ ...addModalInput, regionId });
-    // setSelectedRegion(regionId);
   };
 
   const handleEditSelect = (regionId) => {
@@ -162,7 +155,7 @@ function Bulletin() {
 
       BulletinService.getAllBulletin().then((e) => {
         const { data } = e.data;
-        // console.log(data);
+
         setData(data);
       });
     });
@@ -181,7 +174,7 @@ function Bulletin() {
 
       BulletinService.getAllBulletin().then((e) => {
         const { data } = e.data;
-        // console.log(data);
+
         setData(data);
       });
     });
@@ -254,7 +247,7 @@ function Bulletin() {
 
       BulletinService.getAllBulletin().then((e) => {
         const { data } = e.data;
-        // console.log(data);
+
         setData(data);
       });
     });

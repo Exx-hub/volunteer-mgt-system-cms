@@ -6,12 +6,7 @@ import Modal from "react-modal";
 import moment from "moment-timezone";
 import Alert from "react-s-alert";
 
-import {
-  pModalStyles,
-  customStyles,
-  editModalStyles,
-  getRegion,
-} from "./utils";
+import { pModalStyles, customStyles, editModalStyles } from "./utils";
 import AppUser from "../../service/AppUser";
 import Region from "../../service/Region";
 
@@ -64,14 +59,13 @@ function Users() {
   useEffect(() => {
     AppUser.getAllAppUsers().then((e) => {
       const { data } = e.data;
-      // console.log(data);
 
       setData(data);
     });
 
     Region.getRegionList().then((e) => {
       const { data } = e.data;
-      // console.log(data);
+
       setRegions(data);
     });
   }, []);
@@ -190,7 +184,6 @@ function Users() {
 
     console.log(modalInput);
 
-    // call add user api here
     AppUser.addAppUser(
       modalInput.firstName,
       modalInput.lastName,
@@ -225,11 +218,8 @@ function Users() {
         timeout: 3000,
       });
 
-      // window.location.reload(); // replace with success prompt
-
       AppUser.getAllAppUsers().then((e) => {
         const { data } = e.data;
-        // console.log(data);
 
         setData(data);
       });
@@ -250,7 +240,6 @@ function Users() {
 
       AppUser.getAllAppUsers().then((e) => {
         const { data } = e.data;
-        // console.log(data);
 
         setData(data);
       });
@@ -305,7 +294,6 @@ function Users() {
 
       AppUser.getAllAppUsers().then((e) => {
         const { data } = e.data;
-        // console.log(data);
 
         setData(data);
       });

@@ -18,25 +18,17 @@ function StatusReport() {
     municipality: "",
   });
 
-  // console.log(addMuniInput);
   const [data, setData] = useState([]);
   const [records, setRecords] = useState([]);
-
-  // console.log(records);
 
   const [selectedRegion, setSelectedRegion] = useState(null);
 
   const [selectedMunicipalities, setSelectedMunicipalities] = useState([]);
-  // console.log(selectedMunicipalities);
-
-  // const handleSelect = (region) => {
-  //   setSelectedRegion(region);
-  // };
 
   useEffect(() => {
     Region.getRegionList().then((e) => {
       const { data } = e.data;
-      // console.log(data);
+
       setData(data);
     });
   }, []);
@@ -107,13 +99,10 @@ function StatusReport() {
   };
 
   const getMunicipalitiesByRegionId = (id, name) => {
-    // console.log(name);
-
     setSelectedRegion(name);
 
     Region.getMunicipalityByRegionId(id).then((e) => {
       const { data } = e.data;
-      // console.log(data);
 
       setSelectedMunicipalities(data);
     });
@@ -137,11 +126,6 @@ function StatusReport() {
       align: "center",
       width: "50%",
       render: (e, record) => {
-        // console.log(record);
-        // console.log(record.key);
-        // when button click pass key then modal display
-        // municipalities using key
-        // or use selected region also
         return (
           <>
             <Button

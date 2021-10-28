@@ -23,7 +23,6 @@ function About() {
   useEffect(() => {
     AboutService.getAboutInfo().then((e) => {
       const { data } = e.data;
-      console.log(data);
 
       setData(data);
     });

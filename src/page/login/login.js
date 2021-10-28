@@ -19,21 +19,6 @@ function Login() {
   const onFinish = () => {
     setIsLoading(true);
 
-    // LOGIN API CALL HERE
-
-    // setTimeout(() => {
-    //   setIsLoading(false);
-    //   // alert("login clicked");
-    //   console.log("mobile:", mobile);
-    //   console.log("password", password);
-
-    //   setMobile("");
-    //   setPassword("");
-
-    //   //simulate successful login, redirect to home
-    //   history.push("/home");
-    // }, 2000);
-
     Admin.login(username, password)
       .then((e) => {
         const { data } = e.data;
