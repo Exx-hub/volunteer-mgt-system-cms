@@ -11,6 +11,7 @@ import {
 import BulletinService from "../../service/Bulletin";
 import Region from "../../service/Region";
 import Alert from "react-s-alert";
+import PromptModal from "../../components/PromptModal";
 
 const { Content } = Layout;
 const { TextArea } = Input;
@@ -161,25 +162,6 @@ function Bulletin() {
     });
   };
 
-  // DELETE BULLETIN
-  const deleteBulletinById = (id) => {
-    BulletinService.deleteBulletin(id).then((e) => {
-      const { data } = e.data;
-
-      Alert.success("Successfully deleted bulletin", {
-        position: "top-right",
-        effect: "slide",
-        timeout: 3000,
-      });
-
-      BulletinService.getAllBulletin().then((e) => {
-        const { data } = e.data;
-
-        setData(data);
-      });
-    });
-  };
-
   const openViewModal = (item) => {
     setViewModalOpen(true);
 
@@ -253,6 +235,50 @@ function Bulletin() {
     });
   };
 
+  // DELETE BULLETIN
+  const deleteBulletinById = (id) => {
+    BulletinService.deleteBulletin(id).then((e) => {
+      const { data } = e.data;
+
+      Alert.success("Successfully deleted bulletin", {
+        position: "top-right",
+        effect: "slide",
+        timeout: 3000,
+      });
+
+      BulletinService.getAllBulletin().then((e) => {
+        const { data } = e.data;
+
+        setData(data);
+      });
+    });
+  };
+
+  // CONFIRM MODAL TOGGLERS
+
+  const [confirmVisible, setConfirmVisible] = useState(false);
+  const [bulletinIdToDelete, setBulletinIdToDelete] = useState("");
+
+  console.log(bulletinIdToDelete);
+
+  const openConfirm = (id) => {
+    setConfirmVisible(true);
+    setBulletinIdToDelete(id);
+    // deleteUser(id)
+  };
+
+  const closeConfirm = () => {
+    setConfirmVisible(false);
+  };
+
+  const okConfirm = () => {
+    if (bulletinIdToDelete) {
+      deleteBulletinById(bulletinIdToDelete);
+    }
+    setConfirmVisible(false);
+    setBulletinIdToDelete("");
+  };
+
   const tableSource = [
     {
       title: "Title",
@@ -286,7 +312,7 @@ function Bulletin() {
             EDIT
           </Button>
           <Button
-            onClick={() => deleteBulletinById(bulletinItem.id)}
+            onClick={() => openConfirm(bulletinItem.id)}
             className="bulletin__deleteBtn"
           >
             DELETE
@@ -556,6 +582,16 @@ function Bulletin() {
           </Button>
         </div>
       </Modal>
+
+      <PromptModal
+        visible={confirmVisible}
+        closeModal={closeConfirm}
+        contentLabel="Delete Bulletin  modal"
+        headerTitle="Delete Bulletin"
+        confirmMessage="Are you sure you want to delete item?"
+        buttonText="Confirm"
+        onOk={okConfirm}
+      />
     </Layout>
   );
 }

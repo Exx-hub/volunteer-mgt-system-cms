@@ -251,6 +251,8 @@ function RegionalNews() {
     openEditModal();
   };
 
+  // DELETE NEWS
+
   const handleDeleteNews = (id) => {
     console.log(id);
 
