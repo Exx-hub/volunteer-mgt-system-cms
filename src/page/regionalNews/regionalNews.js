@@ -7,6 +7,7 @@ import { addModalStyles, viewModalStyles, editModalStyles } from "./utils";
 import News from "../../service/News";
 import Region from "../../service/Region";
 import Alert from "react-s-alert";
+import PromptModal from "../../components/PromptModal";
 
 const { Content } = Layout;
 const { TextArea } = Input;
@@ -115,6 +116,7 @@ function RegionalNews() {
     setSelectedRegion(regionId);
   };
 
+  // ADD MODAL TOGGLER
   const openModal = () => {
     setIsOpen(true);
   };
@@ -165,6 +167,7 @@ function RegionalNews() {
     });
   };
 
+  // VIEW MODAL TOGGLER
   const openViewModal = (item) => {
     setViewModalOpen(true);
 
@@ -190,27 +193,7 @@ function RegionalNews() {
     setEditNewsInput({ ...editNewsInput, [e.target.name]: e.target.value });
   };
 
-  const handleDeleteNews = (id) => {
-    console.log(id);
-
-    News.deleteNews(id).then((e) => {
-      const { data } = e.data;
-      console.log(data);
-
-      Alert.success("Successfully deleted news", {
-        position: "top-right",
-        effect: "slide",
-        timeout: 3000,
-      });
-
-      News.getAllNews().then((e) => {
-        const { data } = e.data;
-
-        setData(data);
-      });
-    });
-  };
-
+  // UPDATE MODAL TOGGLER
   const openEditModal = () => {
     setEditModalVisible(true);
   };
@@ -268,6 +251,52 @@ function RegionalNews() {
     openEditModal();
   };
 
+  const handleDeleteNews = (id) => {
+    console.log(id);
+
+    News.deleteNews(id).then((e) => {
+      const { data } = e.data;
+      console.log(data);
+
+      Alert.success("Successfully deleted news", {
+        position: "top-right",
+        effect: "slide",
+        timeout: 3000,
+      });
+
+      News.getAllNews().then((e) => {
+        const { data } = e.data;
+
+        setData(data);
+      });
+    });
+  };
+
+  // CONFIRM MODAL TOGGLERS
+
+  const [confirmVisible, setConfirmVisible] = useState(false);
+  const [newsIdToDelete, setNewsIdToDelete] = useState("");
+
+  console.log(newsIdToDelete);
+
+  const openConfirm = (id) => {
+    setConfirmVisible(true);
+    setNewsIdToDelete(id);
+    // deleteUser(id)
+  };
+
+  const closeConfirm = () => {
+    setConfirmVisible(false);
+  };
+
+  const okConfirm = () => {
+    if (newsIdToDelete) {
+      handleDeleteNews(newsIdToDelete);
+    }
+    setConfirmVisible(false);
+    setNewsIdToDelete("");
+  };
+
   const tableSource = [
     {
       title: "Region",
@@ -307,7 +336,7 @@ function RegionalNews() {
             EDIT
           </Button>
           <Button
-            onClick={() => handleDeleteNews(newsItem.id)}
+            onClick={() => openConfirm(newsItem.id)}
             className="deleteBtn"
           >
             DELETE
@@ -560,6 +589,16 @@ function RegionalNews() {
           </div>
         </div>
       </Modal>
+
+      <PromptModal
+        visible={confirmVisible}
+        closeModal={closeConfirm}
+        contentLabel="Delete News  modal"
+        headerTitle="Delete News"
+        confirmMessage="Are you sure you want to delete item?"
+        buttonText="Confirm"
+        onOk={okConfirm}
+      />
     </Layout>
   );
 }

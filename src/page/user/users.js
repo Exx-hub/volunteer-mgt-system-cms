@@ -145,31 +145,6 @@ function Users() {
     setSelectedRegion(regionId);
   };
 
-  // CONFIRM MODAL TOGGLERS
-
-  const [confirmVisible, setConfirmVisible] = useState(false);
-  const [userIdToDelete, setUserIdToDelete] = useState("");
-
-  console.log(userIdToDelete);
-
-  const openConfirm = (id) => {
-    setConfirmVisible(true);
-    setUserIdToDelete(id);
-    // deleteUser(id)
-  };
-
-  const closeConfirm = () => {
-    setConfirmVisible(false);
-  };
-
-  const okConfirm = () => {
-    if (userIdToDelete) {
-      deleteUser(userIdToDelete);
-    }
-    setConfirmVisible(false);
-    setUserIdToDelete("");
-  };
-
   // PASSWORD MODAL TOGGLERS
 
   const openPModal = () => {
@@ -361,6 +336,31 @@ function Users() {
   // ONCHANGE INPUT FOR EDIT USER MODAL
   const editOnchange = (e) => {
     setEditUserInput({ ...editUserInput, [e.target.name]: e.target.value });
+  };
+
+  // CONFIRM MODAL TOGGLERS
+
+  const [confirmVisible, setConfirmVisible] = useState(false);
+  const [userIdToDelete, setUserIdToDelete] = useState("");
+
+  console.log(userIdToDelete);
+
+  const openConfirm = (id) => {
+    setConfirmVisible(true);
+    setUserIdToDelete(id);
+    // deleteUser(id)
+  };
+
+  const closeConfirm = () => {
+    setConfirmVisible(false);
+  };
+
+  const okConfirm = () => {
+    if (userIdToDelete) {
+      deleteUser(userIdToDelete);
+    }
+    setConfirmVisible(false);
+    setUserIdToDelete("");
   };
 
   // TABLE DATA
