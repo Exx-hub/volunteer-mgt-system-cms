@@ -19,7 +19,6 @@
   top: 60%;
   left: 50%;
   transform: translate(-50%, -50%);
-
   /* border: 2px solid black; */
   /* height: 250px; */
   width: 280px;
@@ -28,6 +27,7 @@
 .loginPage__form {
   display: flex;
   flex-direction: column;
+  /* margin-bottom: 10px; */
 }
 
 .loginPage__inputSpan {
@@ -119,4 +119,12 @@ input::-webkit-inner-spin-button {
 /* Firefox */
 input[type="number"] {
   -moz-appearance: textfield;
+}
+
+.version-column {
+  text-align: center;
+  color: white;
+  transform: translateY(20px);
+  font-size: 15px;
+  font-weight: 300;
 }

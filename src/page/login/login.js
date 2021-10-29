@@ -7,6 +7,7 @@ import { useHistory } from "react-router";
 import Admin from "../../service/Admin";
 import { UserProfile } from "../../utility";
 import Alert from "react-s-alert";
+import { config } from "../../config";
 
 function Login() {
   const [isLoading, setIsLoading] = useState(false);
@@ -107,6 +108,12 @@ function Login() {
             Remember
           </Checkbox>
         </Form>
+
+        <div className="version-column">
+          <span className="version">
+            {config.version.environment} v{config.version.build}
+          </span>
+        </div>
       </div>
     </div>
   );
