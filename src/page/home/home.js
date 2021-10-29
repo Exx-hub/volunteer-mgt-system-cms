@@ -8,6 +8,7 @@ import {
   useHistory,
   useLocation,
 } from "react-router-dom";
+import { UserProfile as User } from "../../utility";
 
 import { Layout, Menu } from "antd";
 
@@ -17,10 +18,13 @@ import Bulletin from "../bulletin";
 import About from "../about";
 import StatusReport from "../statusReport";
 import RegionalNews from "../regionalNews";
+import PromptModal from "../../components/PromptModal";
 
 const { Content, Sider } = Layout;
 
 function Home() {
+  const [logoutVisible, setLogoutVisible] = useState(false);
+
   const history = useHistory();
   const location = useLocation();
 
@@ -32,6 +36,29 @@ function Home() {
     if (location.pathname === "/home/bulletin") setActive("bulletin");
     if (location.pathname === "/home/about") setActive("about");
   }, [location.pathname]);
+
+  const logout = () => {
+    history.push("/");
+
+    // clear credentials then logout
+
+    User.clearData();
+
+    // open modal to confirm before logging out
+  };
+
+  const openModal = () => {
+    setLogoutVisible(true);
+  };
+
+  const closeModal = () => {
+    setLogoutVisible(false);
+  };
+
+  const okModal = () => {
+    setLogoutVisible(false);
+    logout();
+  };
 
   return (
     <Layout className="homePage">
@@ -69,6 +96,10 @@ function Home() {
           >
             About
           </Menu.Item>
+
+          <Menu.Item key="5" className="menu__item" onClick={openModal}>
+            Logout
+          </Menu.Item>
         </Menu>
       </Sider>
 
@@ -98,6 +129,16 @@ function Home() {
           </Switch>
         </Content>
       </Layout>
+
+      <PromptModal
+        visible={logoutVisible}
+        closeModal={closeModal}
+        contentLabel="Logout modal"
+        headerTitle="Confirm Logout"
+        confirmMessage="Are you sure you want to logout?"
+        buttonText="Confirm"
+        onOk={okModal}
+      />
     </Layout>
   );
 }

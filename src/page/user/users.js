@@ -9,6 +9,7 @@ import Alert from "react-s-alert";
 import { pModalStyles, customStyles, editModalStyles } from "./utils";
 import AppUser from "../../service/AppUser";
 import Region from "../../service/Region";
+import PromptModal from "../../components/PromptModal";
 
 const { Content } = Layout;
 
@@ -144,6 +145,33 @@ function Users() {
     setSelectedRegion(regionId);
   };
 
+  // CONFIRM MODAL TOGGLERS
+
+  const [confirmVisible, setConfirmVisible] = useState(false);
+  const [userIdToDelete, setUserIdToDelete] = useState("");
+
+  console.log(userIdToDelete);
+
+  const openConfirm = (id) => {
+    setConfirmVisible(true);
+    setUserIdToDelete(id);
+    // deleteUser(id)
+  };
+
+  const closeConfirm = () => {
+    setConfirmVisible(false);
+  };
+
+  const okConfirm = () => {
+    if (userIdToDelete) {
+      deleteUser(userIdToDelete);
+    }
+    setConfirmVisible(false);
+    setUserIdToDelete("");
+  };
+
+  // PASSWORD MODAL TOGGLERS
+
   const openPModal = () => {
     setPasswordModalVisible(true);
   };
@@ -156,6 +184,8 @@ function Users() {
     setPasswordModalVisible(false);
     alert("Submit generate new password");
   };
+
+  // ADD USER MODAL TOGGLERS
 
   const openModal = () => {
     setIsOpen(true);
@@ -245,6 +275,8 @@ function Users() {
       });
     });
   };
+
+  // UPDATE USER MODAL TOGGLERS
 
   const openEditModal = () => {
     setEditModalVisible(true);
@@ -421,7 +453,7 @@ function Users() {
             >
               EDIT
             </Button>
-            <Button onClick={() => deleteUser(user.id)} className="userDelBtn">
+            <Button onClick={() => openConfirm(user.id)} className="userDelBtn">
               DELETE
             </Button>
           </div>
@@ -839,6 +871,16 @@ function Users() {
             </div>
           </div>
         </Modal>
+
+        <PromptModal
+          visible={confirmVisible}
+          closeModal={closeConfirm}
+          contentLabel="Delete USer  modal"
+          headerTitle="Delete User"
+          confirmMessage="Are you sure you want to delete user?"
+          buttonText="Confirm"
+          onOk={okConfirm}
+        />
       </Layout>
     </>
   );

@@ -49,6 +49,18 @@
   font-size: 14px;
 }
 
+.loginPage__inputSpan .ant-input {
+  border: none;
+  outline: none;
+  margin-left: 0.25rem;
+  background-color: white;
+  font-size: 14px;
+}
+
+.loginPage__inputSpan .anticon {
+  color: #2e418c;
+}
+
 .loginPage__form input[type] {
   color: #2e418c;
 }

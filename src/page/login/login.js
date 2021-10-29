@@ -68,8 +68,7 @@ function Login() {
           </span>
           <span className="loginPage__inputSpan">
             <LockOutlined style={{ fontSize: "20px", color: "#2e418c" }} />{" "}
-            <Input
-              type="password"
+            <Input.Password
               placeholder="Password"
               className="loginPage__input"
               value={password}

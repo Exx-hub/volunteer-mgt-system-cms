@@ -1,0 +1,40 @@
+.modal-header {
+  background-color: #da3748;
+  padding: 8px 20px;
+  color: white;
+  position: relative;
+  text-align: center;
+}
+.modal-close-icon {
+  position: absolute;
+  top: 7px;
+  right: 10px;
+  cursor: pointer;
+}
+.modal-message {
+  text-align: center;
+}
+
+.modal-okBtn {
+  width: 130px;
+  border-radius: 33px;
+  border: none;
+  padding: 10px;
+  margin: 0 auto;
+  margin-top: 5px;
+  margin-bottom: 15px;
+  background-color: #465aa7;
+  color: white;
+  font-size: 14px;
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px,
+    rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
+  cursor: pointer;
+}
+
+.modal-message-div {
+  padding: 20px;
+}
+.modal-button-div {
+  padding: 10px;
+  text-align: center;
+}

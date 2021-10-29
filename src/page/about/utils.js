@@ -14,6 +14,3 @@ export const addAboutTextStyles = {
     // minWidth: "900px",
   },
 };
-
-export const aboutDescription =
-  "Aliqua pariatur anim amet aliqua sint veniam ad mollit laborum ea reprehenderit ex veniam excepteur. Voluptate exercitation proident consequat enim ad nostrud. Tempor nostrud est esse velit dolor aliqua do veniam est officia sint proident. Reprehenderit do aute cillum elit est minim incididunt exercitation ut aute duis voluptate cillum incididunt.";
