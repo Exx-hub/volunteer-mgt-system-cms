@@ -47,7 +47,13 @@ const News = {
     });
   },
 
-  // get news by id?
+  // search news by headline
+  getNewsByHeadline: (searchValue) => {
+    return axios({
+      method: "GET",
+      url: `${BASE_URL}/news/search?search=${searchValue}`,
+    });
+  },
 };
 
 export default News;

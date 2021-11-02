@@ -43,8 +43,6 @@ function Users() {
     password: "",
   });
 
-  // console.log(editUserInput);
-
   const [passwordInput, setPasswordInput] = useState("");
   const [confirmInput, setConfirmInput] = useState("");
 
@@ -54,22 +52,33 @@ function Users() {
   const [data, setData] = useState([]);
   const [records, setRecords] = useState([]);
 
+  const [confirmVisible, setConfirmVisible] = useState(false);
+  const [userIdToDelete, setUserIdToDelete] = useState("");
+
+  // console.log(editUserInput);
+  // console.log(searchInput);
+  // console.log(userIdToDelete);
   // console.log(selectedRegion);
+  console.log("DATA:", data);
 
   // GETS USER LIST AND REGIONLIST
   useEffect(() => {
-    AppUser.getAllAppUsers().then((e) => {
-      const { data } = e.data;
+    if (searchInput === "") {
+      AppUser.getAllAppUsers().then((e) => {
+        const { data } = e.data;
 
-      setData(data);
-    });
+        setData(data);
+      });
+    }
 
-    Region.getRegionList().then((e) => {
-      const { data } = e.data;
+    if (regions.length < 1) {
+      Region.getRegionList().then((e) => {
+        const { data } = e.data;
 
-      setRegions(data);
-    });
-  }, []);
+        setRegions(data);
+      });
+    }
+  }, [searchInput]);
 
   // SETS MUNICIPALITIES DEPENDING ON REGION SELECTED
   useEffect(() => {
@@ -84,15 +93,15 @@ function Users() {
 
   // PARSES RECORDS
   useEffect(() => {
-    if (data.length > 0 || searchInput === "") {
-      parseTableData();
-    }
-  }, [data, searchInput]);
+    // if (data.length > 0) {
+    parseTableData();
+    // }
+  }, [data]);
 
   // parses data from backend
   const parseTableData = () => {
     const record = data.map((e, i) => {
-      console.log(e);
+      // console.log(e);
       return {
         key: i,
         id: e._id,
@@ -116,21 +125,20 @@ function Users() {
   };
 
   // FILTER TABLE DATA WHEN SEARCH IS CLICKED
-  const doSearch = (text) => {
-    const filtered = records.filter((record) => {
-      return (
-        record.lastName.toLowerCase().includes(text) ||
-        record.lastName.toUpperCase().includes(text)
-      );
-    });
-
-    setRecords(filtered);
-  };
 
   const handleKeypress = (e) => {
     if (e.key === "Enter") {
       doSearch(searchInput);
     }
+  };
+
+  const doSearch = (val) => {
+    AppUser.getUserByName(val).then((e) => {
+      const { data } = e.data;
+      console.log(data);
+
+      setData(data);
+    });
   };
 
   // SETS REGION FOR GETTING MUNICIPALITIES FOR EDIT USER
@@ -339,12 +347,6 @@ function Users() {
   };
 
   // CONFIRM MODAL TOGGLERS
-
-  const [confirmVisible, setConfirmVisible] = useState(false);
-  const [userIdToDelete, setUserIdToDelete] = useState("");
-
-  console.log(userIdToDelete);
-
   const openConfirm = (id) => {
     setConfirmVisible(true);
     setUserIdToDelete(id);
@@ -493,6 +495,7 @@ function Users() {
                 value={searchInput}
                 onChange={(e) => setSearchInput(e.target.value)}
                 onKeyPress={(e) => handleKeypress(e)}
+                allowClear
               />
             </span>
           </Row>

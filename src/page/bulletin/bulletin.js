@@ -41,25 +41,34 @@ function Bulletin() {
     description: "",
   });
 
+  const [confirmVisible, setConfirmVisible] = useState(false);
+  const [bulletinIdToDelete, setBulletinIdToDelete] = useState("");
+
+  // console.log(bulletinIdToDelete);
+
   // parses data when data is available
   useEffect(() => {
-    BulletinService.getAllBulletin().then((e) => {
-      const { data } = e.data;
-      setData(data);
-    });
+    if (searchInput === "") {
+      BulletinService.getAllBulletin().then((e) => {
+        const { data } = e.data;
+        setData(data);
+      });
+    }
 
-    Region.getRegionList().then((e) => {
-      const { data } = e.data;
-      setRegions(data);
-    });
-  }, []);
+    if (regions.length < 1) {
+      Region.getRegionList().then((e) => {
+        const { data } = e.data;
+        setRegions(data);
+      });
+    }
+  }, [searchInput]);
 
   // PARSES RECORDS
   useEffect(() => {
-    if (data.length > 0 || searchInput === "") {
-      parseTableData();
-    }
-  }, [data, searchInput]);
+    // if (data.length > 0 || searchInput === "") {
+    parseTableData();
+    // }
+  }, [data]);
 
   // parses data from backend
   const parseTableData = () => {
@@ -78,21 +87,19 @@ function Bulletin() {
   };
 
   // FILTER TABLE DATA WHEN SEARCH IS CLICKED
-  const doSearch = (text) => {
-    const filtered = records.filter((record) => {
-      return (
-        record.title.toLowerCase().includes(text) ||
-        record.title.toUpperCase().includes(text)
-      );
-    });
-
-    setRecords(filtered);
-  };
-
   const handleKeypress = (e) => {
     if (e.key === "Enter") {
       doSearch(searchInput);
     }
+  };
+
+  const doSearch = (val) => {
+    BulletinService.getBulletinByTitle(val).then((e) => {
+      const { data } = e.data;
+      console.log(data);
+
+      setData(data);
+    });
   };
 
   const handleModalInputChange = (e) => {
@@ -256,11 +263,6 @@ function Bulletin() {
 
   // CONFIRM MODAL TOGGLERS
 
-  const [confirmVisible, setConfirmVisible] = useState(false);
-  const [bulletinIdToDelete, setBulletinIdToDelete] = useState("");
-
-  console.log(bulletinIdToDelete);
-
   const openConfirm = (id) => {
     setConfirmVisible(true);
     setBulletinIdToDelete(id);
@@ -351,6 +353,7 @@ function Bulletin() {
               value={searchInput}
               onChange={(e) => setSearchInput(e.target.value)}
               onKeyPress={(e) => handleKeypress(e)}
+              allowClear
             />
           </span>
         </Row>

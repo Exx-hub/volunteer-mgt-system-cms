@@ -58,6 +58,19 @@
   box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
 }
 
+.usersPage__utils .ant-input {
+  border: none;
+  outline: none;
+  /* margin-left: 0.25rem; */
+  margin-right: 20px;
+  background-color: white;
+  font-size: 14px;
+}
+
+.usersPage__utils .anticon {
+  color: rgb(173, 173, 173);
+}
+
 input[type]::placeholder {
   text-align: center;
   color: gray;

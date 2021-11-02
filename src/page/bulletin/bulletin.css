@@ -81,6 +81,18 @@ input[type]::placeholder {
   color: black !important;
 }
 
+.bulletin__utils .ant-input {
+  border: none;
+  outline: none;
+  /* margin-left: 0.25rem; */
+  margin-right: 20px;
+  background-color: white;
+  font-size: 14px;
+}
+.bulletin__utils .anticon {
+  color: rgb(173, 173, 173);
+}
+
 .bulletin__table {
   margin-top: 3rem;
 }

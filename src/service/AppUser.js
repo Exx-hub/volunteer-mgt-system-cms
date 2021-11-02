@@ -96,6 +96,14 @@ const AppUser = {
       url: `${BASE_URL}/user/deleteUser/${userId}`,
     });
   },
+
+  // search user by last name
+  getUserByName: (searchValue) => {
+    return axios({
+      method: "GET",
+      url: `${BASE_URL}/user/search?search=${searchValue}`,
+    });
+  },
 };
 
 export default AppUser;

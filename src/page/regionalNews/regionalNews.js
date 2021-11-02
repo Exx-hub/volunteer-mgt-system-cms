@@ -39,18 +39,27 @@ function RegionalNews() {
     description: "",
   });
 
+  const [confirmVisible, setConfirmVisible] = useState(false);
+  const [newsIdToDelete, setNewsIdToDelete] = useState("");
+
+  // console.log(newsIdToDelete);
+
   // GET NEWS LIST WHEN COMPONENT MOUNTS
   useEffect(() => {
-    News.getAllNews().then((e) => {
-      const { data } = e.data;
-      setData(data);
-    });
+    if (searchInput === "") {
+      News.getAllNews().then((e) => {
+        const { data } = e.data;
+        setData(data);
+      });
+    }
 
-    Region.getRegionList().then((e) => {
-      const { data } = e.data;
-      setRegions(data);
-    });
-  }, []);
+    if (regions.length < 1) {
+      Region.getRegionList().then((e) => {
+        const { data } = e.data;
+        setRegions(data);
+      });
+    }
+  }, [searchInput]);
 
   // SETS MUNICIPALITIES DEPENDING ON REGION SELECTED
   useEffect(() => {
@@ -64,10 +73,10 @@ function RegionalNews() {
   }, [selectedRegion]);
 
   useEffect(() => {
-    if (data.length > 0 || searchInput === "") {
-      parseTableData();
-    }
-  }, [data, searchInput]);
+    // if (data.length > 0) {
+    parseTableData();
+    // }
+  }, [data]);
 
   // parses data saved in DATA state
   const parseTableData = () => {
@@ -87,22 +96,19 @@ function RegionalNews() {
     setRecords(record);
   };
 
-  // FILTER TABLE DATA WHEN SEARCH IS CLICKED
-  const doSearch = (text) => {
-    const filtered = records.filter((record) => {
-      return (
-        record.headline.toLowerCase().includes(text) ||
-        record.headline.toUpperCase().includes(text)
-      );
-    });
-
-    setRecords(filtered);
-  };
-
   const handleKeypress = (e) => {
     if (e.key === "Enter") {
       doSearch(searchInput);
     }
+  };
+
+  const doSearch = (val) => {
+    News.getNewsByHeadline(val).then((e) => {
+      const { data } = e.data;
+      console.log(data);
+
+      setData(data);
+    });
   };
 
   const handleSelect = (regionId) => {
@@ -276,11 +282,6 @@ function RegionalNews() {
 
   // CONFIRM MODAL TOGGLERS
 
-  const [confirmVisible, setConfirmVisible] = useState(false);
-  const [newsIdToDelete, setNewsIdToDelete] = useState("");
-
-  console.log(newsIdToDelete);
-
   const openConfirm = (id) => {
     setConfirmVisible(true);
     setNewsIdToDelete(id);
@@ -377,6 +378,7 @@ function RegionalNews() {
               value={searchInput}
               onChange={(e) => setSearchInput(e.target.value)}
               onKeyPress={(e) => handleKeypress(e)}
+              allowClear
             />
           </span>
         </Row>
