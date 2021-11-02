@@ -6,10 +6,10 @@ export const config = {
   },
   version: {
     environment: "",
-    build: "1.0.0(2)",
+    build: "1.0.0(3)",
   },
   environment: "",
-  changeLogs: `bugFix/login-page-body-tabTitle-favicon`,
+  changeLogs: `feature/implement-search-api/build3`,
 };
 
 export const ERROR_CODES = {

@@ -42,8 +42,6 @@ function RegionalNews() {
   const [confirmVisible, setConfirmVisible] = useState(false);
   const [newsIdToDelete, setNewsIdToDelete] = useState("");
 
-  // console.log(newsIdToDelete);
-
   // GET NEWS LIST WHEN COMPONENT MOUNTS
   useEffect(() => {
     if (searchInput === "") {
@@ -73,9 +71,7 @@ function RegionalNews() {
   }, [selectedRegion]);
 
   useEffect(() => {
-    // if (data.length > 0) {
     parseTableData();
-    // }
   }, [data]);
 
   // parses data saved in DATA state
