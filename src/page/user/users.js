@@ -9,6 +9,7 @@ import Alert from "react-s-alert";
 import { pModalStyles, customStyles, editModalStyles } from "./utils";
 import AppUser from "../../service/AppUser";
 import Region from "../../service/Region";
+import PromptModal from "../../components/PromptModal";
 
 const { Content } = Layout;
 
@@ -42,8 +43,6 @@ function Users() {
     password: "",
   });
 
-  // console.log(editUserInput);
-
   const [passwordInput, setPasswordInput] = useState("");
   const [confirmInput, setConfirmInput] = useState("");
 
@@ -53,22 +52,33 @@ function Users() {
   const [data, setData] = useState([]);
   const [records, setRecords] = useState([]);
 
+  const [confirmVisible, setConfirmVisible] = useState(false);
+  const [userIdToDelete, setUserIdToDelete] = useState("");
+
+  // console.log(editUserInput);
+  // console.log(searchInput);
+  // console.log(userIdToDelete);
   // console.log(selectedRegion);
+  console.log("DATA:", data);
 
   // GETS USER LIST AND REGIONLIST
   useEffect(() => {
-    AppUser.getAllAppUsers().then((e) => {
-      const { data } = e.data;
+    if (searchInput === "") {
+      AppUser.getAllAppUsers().then((e) => {
+        const { data } = e.data;
 
-      setData(data);
-    });
+        setData(data);
+      });
+    }
 
-    Region.getRegionList().then((e) => {
-      const { data } = e.data;
+    if (regions.length < 1) {
+      Region.getRegionList().then((e) => {
+        const { data } = e.data;
 
-      setRegions(data);
-    });
-  }, []);
+        setRegions(data);
+      });
+    }
+  }, [searchInput]);
 
   // SETS MUNICIPALITIES DEPENDING ON REGION SELECTED
   useEffect(() => {
@@ -83,15 +93,15 @@ function Users() {
 
   // PARSES RECORDS
   useEffect(() => {
-    if (data.length > 0 || searchInput === "") {
-      parseTableData();
-    }
-  }, [data, searchInput]);
+    // if (data.length > 0) {
+    parseTableData();
+    // }
+  }, [data]);
 
   // parses data from backend
   const parseTableData = () => {
     const record = data.map((e, i) => {
-      console.log(e);
+      // console.log(e);
       return {
         key: i,
         id: e._id,
@@ -115,21 +125,20 @@ function Users() {
   };
 
   // FILTER TABLE DATA WHEN SEARCH IS CLICKED
-  const doSearch = (text) => {
-    const filtered = records.filter((record) => {
-      return (
-        record.lastName.toLowerCase().includes(text) ||
-        record.lastName.toUpperCase().includes(text)
-      );
-    });
-
-    setRecords(filtered);
-  };
 
   const handleKeypress = (e) => {
     if (e.key === "Enter") {
       doSearch(searchInput);
     }
+  };
+
+  const doSearch = (val) => {
+    AppUser.getUserByName(val).then((e) => {
+      const { data } = e.data;
+      console.log(data);
+
+      setData(data);
+    });
   };
 
   // SETS REGION FOR GETTING MUNICIPALITIES FOR EDIT USER
@@ -144,6 +153,8 @@ function Users() {
     setSelectedRegion(regionId);
   };
 
+  // PASSWORD MODAL TOGGLERS
+
   const openPModal = () => {
     setPasswordModalVisible(true);
   };
@@ -156,6 +167,8 @@ function Users() {
     setPasswordModalVisible(false);
     alert("Submit generate new password");
   };
+
+  // ADD USER MODAL TOGGLERS
 
   const openModal = () => {
     setIsOpen(true);
@@ -246,6 +259,8 @@ function Users() {
     });
   };
 
+  // UPDATE USER MODAL TOGGLERS
+
   const openEditModal = () => {
     setEditModalVisible(true);
   };
@@ -329,6 +344,25 @@ function Users() {
   // ONCHANGE INPUT FOR EDIT USER MODAL
   const editOnchange = (e) => {
     setEditUserInput({ ...editUserInput, [e.target.name]: e.target.value });
+  };
+
+  // CONFIRM MODAL TOGGLERS
+  const openConfirm = (id) => {
+    setConfirmVisible(true);
+    setUserIdToDelete(id);
+    // deleteUser(id)
+  };
+
+  const closeConfirm = () => {
+    setConfirmVisible(false);
+  };
+
+  const okConfirm = () => {
+    if (userIdToDelete) {
+      deleteUser(userIdToDelete);
+    }
+    setConfirmVisible(false);
+    setUserIdToDelete("");
   };
 
   // TABLE DATA
@@ -421,7 +455,7 @@ function Users() {
             >
               EDIT
             </Button>
-            <Button onClick={() => deleteUser(user.id)} className="userDelBtn">
+            <Button onClick={() => openConfirm(user.id)} className="userDelBtn">
               DELETE
             </Button>
           </div>
@@ -461,6 +495,7 @@ function Users() {
                 value={searchInput}
                 onChange={(e) => setSearchInput(e.target.value)}
                 onKeyPress={(e) => handleKeypress(e)}
+                allowClear
               />
             </span>
           </Row>
@@ -839,6 +874,16 @@ function Users() {
             </div>
           </div>
         </Modal>
+
+        <PromptModal
+          visible={confirmVisible}
+          closeModal={closeConfirm}
+          contentLabel="Delete USer  modal"
+          headerTitle="Delete User"
+          confirmMessage="Are you sure you want to delete user?"
+          buttonText="Confirm"
+          onOk={okConfirm}
+        />
       </Layout>
     </>
   );

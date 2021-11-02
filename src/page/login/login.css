@@ -19,7 +19,6 @@
   top: 60%;
   left: 50%;
   transform: translate(-50%, -50%);
-
   /* border: 2px solid black; */
   /* height: 250px; */
   width: 280px;
@@ -28,6 +27,7 @@
 .loginPage__form {
   display: flex;
   flex-direction: column;
+  /* margin-bottom: 10px; */
 }
 
 .loginPage__inputSpan {
@@ -47,6 +47,18 @@
   margin-left: 0.25rem;
   background-color: white;
   font-size: 14px;
+}
+
+.loginPage__inputSpan .ant-input {
+  border: none;
+  outline: none;
+  margin-left: 0.25rem;
+  background-color: white;
+  font-size: 14px;
+}
+
+.loginPage__inputSpan .anticon {
+  color: #2e418c;
 }
 
 .loginPage__form input[type] {
@@ -119,4 +131,12 @@ input::-webkit-inner-spin-button {
 /* Firefox */
 input[type="number"] {
   -moz-appearance: textfield;
+}
+
+.version-column {
+  text-align: center;
+  color: white;
+  transform: translateY(20px);
+  font-size: 15px;
+  font-weight: 300;
 }

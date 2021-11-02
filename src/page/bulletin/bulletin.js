@@ -11,6 +11,7 @@ import {
 import BulletinService from "../../service/Bulletin";
 import Region from "../../service/Region";
 import Alert from "react-s-alert";
+import PromptModal from "../../components/PromptModal";
 
 const { Content } = Layout;
 const { TextArea } = Input;
@@ -40,25 +41,34 @@ function Bulletin() {
     description: "",
   });
 
+  const [confirmVisible, setConfirmVisible] = useState(false);
+  const [bulletinIdToDelete, setBulletinIdToDelete] = useState("");
+
+  // console.log(bulletinIdToDelete);
+
   // parses data when data is available
   useEffect(() => {
-    BulletinService.getAllBulletin().then((e) => {
-      const { data } = e.data;
-      setData(data);
-    });
+    if (searchInput === "") {
+      BulletinService.getAllBulletin().then((e) => {
+        const { data } = e.data;
+        setData(data);
+      });
+    }
 
-    Region.getRegionList().then((e) => {
-      const { data } = e.data;
-      setRegions(data);
-    });
-  }, []);
+    if (regions.length < 1) {
+      Region.getRegionList().then((e) => {
+        const { data } = e.data;
+        setRegions(data);
+      });
+    }
+  }, [searchInput]);
 
   // PARSES RECORDS
   useEffect(() => {
-    if (data.length > 0 || searchInput === "") {
-      parseTableData();
-    }
-  }, [data, searchInput]);
+    // if (data.length > 0 || searchInput === "") {
+    parseTableData();
+    // }
+  }, [data]);
 
   // parses data from backend
   const parseTableData = () => {
@@ -77,21 +87,19 @@ function Bulletin() {
   };
 
   // FILTER TABLE DATA WHEN SEARCH IS CLICKED
-  const doSearch = (text) => {
-    const filtered = records.filter((record) => {
-      return (
-        record.title.toLowerCase().includes(text) ||
-        record.title.toUpperCase().includes(text)
-      );
-    });
-
-    setRecords(filtered);
-  };
-
   const handleKeypress = (e) => {
     if (e.key === "Enter") {
       doSearch(searchInput);
     }
+  };
+
+  const doSearch = (val) => {
+    BulletinService.getBulletinByTitle(val).then((e) => {
+      const { data } = e.data;
+      console.log(data);
+
+      setData(data);
+    });
   };
 
   const handleModalInputChange = (e) => {
@@ -148,25 +156,6 @@ function Bulletin() {
       });
 
       Alert.success("Successfully added bulletin", {
-        position: "top-right",
-        effect: "slide",
-        timeout: 3000,
-      });
-
-      BulletinService.getAllBulletin().then((e) => {
-        const { data } = e.data;
-
-        setData(data);
-      });
-    });
-  };
-
-  // DELETE BULLETIN
-  const deleteBulletinById = (id) => {
-    BulletinService.deleteBulletin(id).then((e) => {
-      const { data } = e.data;
-
-      Alert.success("Successfully deleted bulletin", {
         position: "top-right",
         effect: "slide",
         timeout: 3000,
@@ -253,6 +242,45 @@ function Bulletin() {
     });
   };
 
+  // DELETE BULLETIN
+  const deleteBulletinById = (id) => {
+    BulletinService.deleteBulletin(id).then((e) => {
+      const { data } = e.data;
+
+      Alert.success("Successfully deleted bulletin", {
+        position: "top-right",
+        effect: "slide",
+        timeout: 3000,
+      });
+
+      BulletinService.getAllBulletin().then((e) => {
+        const { data } = e.data;
+
+        setData(data);
+      });
+    });
+  };
+
+  // CONFIRM MODAL TOGGLERS
+
+  const openConfirm = (id) => {
+    setConfirmVisible(true);
+    setBulletinIdToDelete(id);
+    // deleteUser(id)
+  };
+
+  const closeConfirm = () => {
+    setConfirmVisible(false);
+  };
+
+  const okConfirm = () => {
+    if (bulletinIdToDelete) {
+      deleteBulletinById(bulletinIdToDelete);
+    }
+    setConfirmVisible(false);
+    setBulletinIdToDelete("");
+  };
+
   const tableSource = [
     {
       title: "Title",
@@ -286,7 +314,7 @@ function Bulletin() {
             EDIT
           </Button>
           <Button
-            onClick={() => deleteBulletinById(bulletinItem.id)}
+            onClick={() => openConfirm(bulletinItem.id)}
             className="bulletin__deleteBtn"
           >
             DELETE
@@ -325,6 +353,7 @@ function Bulletin() {
               value={searchInput}
               onChange={(e) => setSearchInput(e.target.value)}
               onKeyPress={(e) => handleKeypress(e)}
+              allowClear
             />
           </span>
         </Row>
@@ -556,6 +585,16 @@ function Bulletin() {
           </Button>
         </div>
       </Modal>
+
+      <PromptModal
+        visible={confirmVisible}
+        closeModal={closeConfirm}
+        contentLabel="Delete Bulletin  modal"
+        headerTitle="Delete Bulletin"
+        confirmMessage="Are you sure you want to delete item?"
+        buttonText="Confirm"
+        onOk={okConfirm}
+      />
     </Layout>
   );
 }

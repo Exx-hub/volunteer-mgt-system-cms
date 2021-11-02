@@ -48,7 +48,13 @@ const Bulletin = {
     });
   },
 
-  // get bulletin by id?
+  // search bulletin by title
+  getBulletinByTitle: (searchValue) => {
+    return axios({
+      method: "GET",
+      url: `${BASE_URL}/bulletin/search?search=${searchValue}`,
+    });
+  },
 };
 
 export default Bulletin;

@@ -7,6 +7,7 @@ import { addModalStyles, viewModalStyles, editModalStyles } from "./utils";
 import News from "../../service/News";
 import Region from "../../service/Region";
 import Alert from "react-s-alert";
+import PromptModal from "../../components/PromptModal";
 
 const { Content } = Layout;
 const { TextArea } = Input;
@@ -38,18 +39,25 @@ function RegionalNews() {
     description: "",
   });
 
+  const [confirmVisible, setConfirmVisible] = useState(false);
+  const [newsIdToDelete, setNewsIdToDelete] = useState("");
+
   // GET NEWS LIST WHEN COMPONENT MOUNTS
   useEffect(() => {
-    News.getAllNews().then((e) => {
-      const { data } = e.data;
-      setData(data);
-    });
+    if (searchInput === "") {
+      News.getAllNews().then((e) => {
+        const { data } = e.data;
+        setData(data);
+      });
+    }
 
-    Region.getRegionList().then((e) => {
-      const { data } = e.data;
-      setRegions(data);
-    });
-  }, []);
+    if (regions.length < 1) {
+      Region.getRegionList().then((e) => {
+        const { data } = e.data;
+        setRegions(data);
+      });
+    }
+  }, [searchInput]);
 
   // SETS MUNICIPALITIES DEPENDING ON REGION SELECTED
   useEffect(() => {
@@ -63,10 +71,8 @@ function RegionalNews() {
   }, [selectedRegion]);
 
   useEffect(() => {
-    if (data.length > 0 || searchInput === "") {
-      parseTableData();
-    }
-  }, [data, searchInput]);
+    parseTableData();
+  }, [data]);
 
   // parses data saved in DATA state
   const parseTableData = () => {
@@ -86,22 +92,19 @@ function RegionalNews() {
     setRecords(record);
   };
 
-  // FILTER TABLE DATA WHEN SEARCH IS CLICKED
-  const doSearch = (text) => {
-    const filtered = records.filter((record) => {
-      return (
-        record.headline.toLowerCase().includes(text) ||
-        record.headline.toUpperCase().includes(text)
-      );
-    });
-
-    setRecords(filtered);
-  };
-
   const handleKeypress = (e) => {
     if (e.key === "Enter") {
       doSearch(searchInput);
     }
+  };
+
+  const doSearch = (val) => {
+    News.getNewsByHeadline(val).then((e) => {
+      const { data } = e.data;
+      console.log(data);
+
+      setData(data);
+    });
   };
 
   const handleSelect = (regionId) => {
@@ -115,6 +118,7 @@ function RegionalNews() {
     setSelectedRegion(regionId);
   };
 
+  // ADD MODAL TOGGLER
   const openModal = () => {
     setIsOpen(true);
   };
@@ -165,6 +169,7 @@ function RegionalNews() {
     });
   };
 
+  // VIEW MODAL TOGGLER
   const openViewModal = (item) => {
     setViewModalOpen(true);
 
@@ -190,27 +195,7 @@ function RegionalNews() {
     setEditNewsInput({ ...editNewsInput, [e.target.name]: e.target.value });
   };
 
-  const handleDeleteNews = (id) => {
-    console.log(id);
-
-    News.deleteNews(id).then((e) => {
-      const { data } = e.data;
-      console.log(data);
-
-      Alert.success("Successfully deleted news", {
-        position: "top-right",
-        effect: "slide",
-        timeout: 3000,
-      });
-
-      News.getAllNews().then((e) => {
-        const { data } = e.data;
-
-        setData(data);
-      });
-    });
-  };
-
+  // UPDATE MODAL TOGGLER
   const openEditModal = () => {
     setEditModalVisible(true);
   };
@@ -268,6 +253,49 @@ function RegionalNews() {
     openEditModal();
   };
 
+  // DELETE NEWS
+
+  const handleDeleteNews = (id) => {
+    console.log(id);
+
+    News.deleteNews(id).then((e) => {
+      const { data } = e.data;
+      console.log(data);
+
+      Alert.success("Successfully deleted news", {
+        position: "top-right",
+        effect: "slide",
+        timeout: 3000,
+      });
+
+      News.getAllNews().then((e) => {
+        const { data } = e.data;
+
+        setData(data);
+      });
+    });
+  };
+
+  // CONFIRM MODAL TOGGLERS
+
+  const openConfirm = (id) => {
+    setConfirmVisible(true);
+    setNewsIdToDelete(id);
+    // deleteUser(id)
+  };
+
+  const closeConfirm = () => {
+    setConfirmVisible(false);
+  };
+
+  const okConfirm = () => {
+    if (newsIdToDelete) {
+      handleDeleteNews(newsIdToDelete);
+    }
+    setConfirmVisible(false);
+    setNewsIdToDelete("");
+  };
+
   const tableSource = [
     {
       title: "Region",
@@ -307,7 +335,7 @@ function RegionalNews() {
             EDIT
           </Button>
           <Button
-            onClick={() => handleDeleteNews(newsItem.id)}
+            onClick={() => openConfirm(newsItem.id)}
             className="deleteBtn"
           >
             DELETE
@@ -346,6 +374,7 @@ function RegionalNews() {
               value={searchInput}
               onChange={(e) => setSearchInput(e.target.value)}
               onKeyPress={(e) => handleKeypress(e)}
+              allowClear
             />
           </span>
         </Row>
@@ -560,6 +589,16 @@ function RegionalNews() {
           </div>
         </div>
       </Modal>
+
+      <PromptModal
+        visible={confirmVisible}
+        closeModal={closeConfirm}
+        contentLabel="Delete News  modal"
+        headerTitle="Delete News"
+        confirmMessage="Are you sure you want to delete item?"
+        buttonText="Confirm"
+        onOk={okConfirm}
+      />
     </Layout>
   );
 }

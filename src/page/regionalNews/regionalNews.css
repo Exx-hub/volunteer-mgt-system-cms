@@ -74,6 +74,19 @@
   font-weight: 300;
 }
 
+.regionalNews__utils .ant-input {
+  border: none;
+  outline: none;
+  /* margin-left: 0.25rem; */
+  margin-right: 20px;
+  background-color: white;
+  font-size: 14px;
+}
+
+.regionalNews__utils .anticon {
+  color: rgb(173, 173, 173);
+}
+
 .search--input {
   border: none;
   outline: none;
